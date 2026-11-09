@@ -10,16 +10,16 @@
   <meta property="og:description" content="React / Next.js / TypeScript. Design systems, data-heavy tables, performance, and leading small teams.">
   <meta property="og:type" content="website">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=3">
   <script>
     // Apply the saved theme before first paint to avoid a flash.
     try { var t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
   </script>
 </head>
-<body>
+<body id="top">
   <a class="skip" href="#main">Skip to content</a>
 
-  <header class="nav" id="top">
+  <header class="nav">
     <div class="wrap nav__in">
       <a class="brand" href="#top" aria-label="Tri Nguyen, home"><span class="brand__mark">TN</span><span class="brand__name">Tri Nguyen</span></a>
       <button class="nav__toggle" aria-expanded="false" aria-controls="menu" aria-label="Menu"><span></span><span></span></button>
@@ -344,6 +344,10 @@
     <a href="#top">Back to top ↑</a>
   </footer>
 
-  <script src="script.js" defer></script>
+  <a class="totop" href="#top" aria-label="Back to top" title="Back to top">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+  </a>
+
+  <script src="script.js?v=3" defer></script>
 </body>
 </html>

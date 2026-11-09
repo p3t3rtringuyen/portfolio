@@ -40,15 +40,28 @@
   });
 
   // Reveal on scroll
-  var targets = document.querySelectorAll('.section, .stats li, .project, .card');
-  targets.forEach(function (el) { el.classList.add('reveal'); });
+  // Each block fades and rises into place as it scrolls in from the bottom;
+  // siblings in the same row are staggered. The classes are removed afterwards
+  // so hover styles are not held back by the reveal transition.
+  var targets = document.querySelectorAll('.section__title, .section__intro, .filters, .stats li, .project, .card, .timeline li');
+  targets.forEach(function (el) {
+    var idx = Array.prototype.indexOf.call(el.parentNode.children, el);
+    el.style.setProperty('--d', (idx % 3) * 0.1 + 's');
+    el.classList.add('reveal');
+  });
   if ('IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
-    }, { threshold: 0.08 });
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        var el = en.target;
+        el.classList.add('in');
+        io.unobserve(el);
+        setTimeout(function () { el.classList.remove('reveal', 'in'); el.style.removeProperty('--d'); }, 1400);
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
     targets.forEach(function (el) { io.observe(el); });
   } else {
-    targets.forEach(function (el) { el.classList.add('in'); });
+    targets.forEach(function (el) { el.classList.remove('reveal'); });
   }
 
   // ---- Floating mini-browser windows -------------------------------------
@@ -252,6 +265,12 @@
     if (!e.target.closest('.open') && String(window.getSelection())) return; // user is selecting text
     openCard(e.target.closest('.project'));
   });
+
+  // Floating back-to-top button: shown once the page is scrolled
+  var toTop = document.querySelector('.totop');
+  function toggleToTop() { toTop.classList.toggle('show', window.scrollY > 400); }
+  window.addEventListener('scroll', toggleToTop, { passive: true });
+  toggleToTop();
 
   document.getElementById('year').textContent = new Date().getFullYear();
 })();
