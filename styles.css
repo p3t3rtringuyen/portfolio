@@ -107,11 +107,33 @@ p { margin: 0 0 1em; }
 .project .chips { margin-top: auto; }
 .links { display: flex; flex-wrap: wrap; gap: 14px; margin: 0; font-size: 14px; }
 
-/* open-in-window affordance */
+/* project cards: the name opens a window, the rest zooms and flips */
 .project { position: relative; cursor: pointer; }
-.project .open { position: absolute; top: 18px; right: 18px; display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--text); font: 500 12.5px var(--font); cursor: pointer; opacity: .85; }
-.project:hover .open, .project .open:focus-visible { opacity: 1; border-color: var(--accent); color: var(--accent); }
-.project header { padding-right: 112px; }
+.project .name { font: inherit; letter-spacing: inherit; color: inherit; background: none; border: 0; padding: 0; text-align: left; cursor: pointer; text-decoration: underline dotted var(--muted); text-underline-offset: 5px; }
+.project .name::after { content: " ↗"; color: var(--accent); opacity: 0; transition: opacity .15s; }
+.project .name:hover, .project .name:focus-visible { color: var(--accent); }
+.project .name:hover::after, .project .name:focus-visible::after { opacity: 1; }
+
+/* zoomed card with a flip to the website */
+.zoom { position: fixed; inset: 0; z-index: 100; }
+.zoom__backdrop { position: absolute; inset: 0; background: rgba(5, 8, 18, .66); backdrop-filter: blur(6px); opacity: 0; transition: opacity .4s; }
+.zoom.is-open .zoom__backdrop { opacity: 1; }
+.zoom__card { position: absolute; perspective: 2000px; transition: left .5s cubic-bezier(.2, .8, .2, 1), top .5s cubic-bezier(.2, .8, .2, 1), width .5s cubic-bezier(.2, .8, .2, 1), height .5s cubic-bezier(.2, .8, .2, 1); }
+.zoom__flip { position: absolute; inset: 0; transform-style: preserve-3d; transition: transform .85s cubic-bezier(.4, .1, .2, 1); }
+.zoom__card.is-flipped .zoom__flip { transform: rotateY(180deg); }
+.zoom__face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 16px; overflow: hidden; background: var(--surface); border: 1px solid var(--accent); box-shadow: 0 30px 90px rgba(0, 0, 0, .55); }
+.zoom__front { padding: 32px 32px 44px; overflow: auto; cursor: pointer; transform: none !important; }
+.zoom__front header { padding: 0; }
+.zoom__front h3 { font-size: 1.7rem; }
+.zoom__front .bullets { font-size: 16px; }
+.zoom__front .chips { margin-top: 4px; }
+.zoom__hint { margin: 6px 0 0; color: var(--accent); font: 600 13px var(--mono); }
+.zoom__x { position: absolute; top: 14px; right: 14px; width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface-2); color: var(--text); cursor: pointer; }
+.zoom__x:hover { border-color: var(--accent); color: var(--accent); }
+.zoom__back { transform: rotateY(180deg); display: flex; flex-direction: column; }
+.zoom__bar { cursor: default; }
+.zoom__bar button.win__ext { border: 0; background: transparent; cursor: pointer; font-size: 16px; }
+.zoom__card:not(.is-flipped) .zoom__back, .zoom__card.is-flipped .zoom__front { pointer-events: none; }
 
 /* floating mini-browser windows */
 .win-layer { position: fixed; inset: 0; z-index: 90; pointer-events: none; }
@@ -154,8 +176,7 @@ body.is-dragging { user-select: none; }
 @media (max-width: 720px) {
   .win { inset: 72px 8px 8px !important; width: auto !important; height: auto !important; }
   .win__grip, .win__light--max { display: none; }
-  .project header { padding-right: 0; }
-  .project .open { position: static; align-self: flex-start; }
+  .zoom__front { padding: 24px 20px 40px; }
 }
 
 /* timeline */

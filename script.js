@@ -234,6 +234,7 @@
 
   closeAll.addEventListener('click', function () { wins.slice().forEach(closeWin); });
   document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && zoom) { closeZoom(); return; }
     if (e.key === 'Escape' && wins.length) {
       var top = wins.filter(function (o) { return o.el.classList.contains('is-active'); })[0];
       if (top) closeWin(top);
@@ -245,25 +246,141 @@
     openWin({ key: titleOf(card), title: titleOf(card), url: card.dataset.url, external: card.dataset.external, card: card });
   }
 
+  // The project's name is a button that opens the mini-browser window.
   projects.forEach(function (card) {
-    var b = el('button', 'open', 'Open ↗');
+    var h3 = card.querySelector('h3');
+    var b = el('button', 'name', h3.firstChild.textContent.trim());
     b.type = 'button';
-    b.setAttribute('aria-label', 'Open ' + titleOf(card) + ' in a window');
-    card.querySelector('header').appendChild(b);
+    b.title = 'Open in a mini-browser window';
+    h3.replaceChild(b, h3.firstChild);
+    card.tabIndex = 0;
   });
 
+  // ---- Zoom + flip: the rest of the card zooms to the centre; a second click
+  // turns it 180° around the vertical axis to show the website on its back.
+  var zoom = null;
+
+  function zoomRect() {
+    var w = Math.min(780, window.innerWidth * 0.92), h = Math.min(580, window.innerHeight * 0.84);
+    return { left: (window.innerWidth - w) / 2, top: (window.innerHeight - h) / 2, width: w, height: h };
+  }
+  function place(node, r) {
+    node.style.left = r.left + 'px'; node.style.top = r.top + 'px';
+    node.style.width = r.width + 'px'; node.style.height = r.height + 'px';
+  }
+
+  function closeZoom() {
+    if (!zoom) return;
+    var z = zoom;
+    zoom = null;
+    z.wrap.classList.remove('is-flipped');
+    z.root.classList.remove('is-open');
+    place(z.wrap, z.card.getBoundingClientRect());
+    setTimeout(function () { z.root.remove(); z.card.style.visibility = ''; }, 520);
+  }
+
+  function openZoom(card) {
+    if (zoom) return;
+    var url = card.dataset.url, external = card.dataset.external;
+    var root = el('div', 'zoom');
+    var backdrop = el('div', 'zoom__backdrop');
+    var wrap = el('div', 'zoom__card');
+    var flip = el('div', 'zoom__flip');
+
+    // Front: a copy of the card
+    var front = el('div', 'zoom__face zoom__front project');
+    front.tabIndex = 0;
+    front.setAttribute('role', 'button');
+    front.setAttribute('aria-label', 'Flip the card to see the website of ' + titleOf(card));
+    var head = card.querySelector('header').cloneNode(true);
+    var nm = head.querySelector('.name');
+    if (nm) nm.replaceWith(document.createTextNode(nm.textContent + ' '));
+    front.appendChild(head);
+    ['.bullets', '.chips'].forEach(function (sel) {
+      var part = card.querySelector(sel);
+      if (part) front.appendChild(part.cloneNode(true));
+    });
+    front.appendChild(el('p', 'zoom__hint', 'Click the card to flip it and see the website ↻'));
+    var x1 = el('button', 'zoom__x', '✕');
+    x1.type = 'button'; x1.setAttribute('aria-label', 'Close');
+    front.appendChild(x1);
+
+    // Back: the website (loaded on the first flip) or the case study
+    var back = el('div', 'zoom__face zoom__back');
+    var bar = el('div', 'win__bar zoom__bar');
+    var bFlip = el('button', 'win__ext', '↺');
+    bFlip.type = 'button'; bFlip.title = 'Flip back'; bFlip.setAttribute('aria-label', 'Flip back');
+    var urlText = url ? url.replace(/^https?:\/\//, '') : (external ? external.replace(/^https?:\/\//, '') : 'case-study');
+    var urlBox = el('div', 'win__url', urlText);
+    bar.appendChild(bFlip); bar.appendChild(urlBox);
+    var target = url || external;
+    if (target) {
+      var ext = el('a', 'win__ext', '↗');
+      ext.href = target; ext.target = '_blank'; ext.rel = 'noopener';
+      ext.title = 'Open in a new tab'; ext.setAttribute('aria-label', 'Open in a new tab');
+      bar.appendChild(ext);
+    }
+    var x2 = el('button', 'win__ext', '✕');
+    x2.type = 'button'; x2.setAttribute('aria-label', 'Close');
+    bar.appendChild(x2);
+    var content = el('div', 'win__body');
+    var frame = null;
+    if (url) {
+      frame = document.createElement('iframe');
+      frame.title = titleOf(card);
+      frame.referrerPolicy = 'no-referrer';
+      frame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox');
+      content.appendChild(frame);
+    } else {
+      content.appendChild(buildPage(card, external));
+    }
+    back.appendChild(bar); back.appendChild(content);
+
+    flip.appendChild(front); flip.appendChild(back);
+    wrap.appendChild(flip);
+    root.appendChild(backdrop); root.appendChild(wrap);
+
+    card.style.visibility = 'hidden';
+    place(wrap, card.getBoundingClientRect());
+    document.body.appendChild(root);
+    wrap.offsetWidth; // commit the start rect before animating to the centre
+    root.classList.add('is-open');
+    place(wrap, zoomRect());
+    front.focus({ preventScroll: true });
+
+    zoom = { root: root, wrap: wrap, card: card };
+
+    function turn(on) {
+      wrap.classList.toggle('is-flipped', on);
+      if (on && frame && !frame.src) frame.src = url;
+      (on ? bFlip : front).focus({ preventScroll: true });
+    }
+    front.addEventListener('click', function (e) { if (!e.target.closest('.zoom__x, a')) turn(true); });
+    front.addEventListener('keydown', function (e) { if ((e.key === 'Enter' || e.key === ' ') && e.target === front) { e.preventDefault(); turn(true); } });
+    bFlip.addEventListener('click', function () { turn(false); });
+    x1.addEventListener('click', closeZoom);
+    x2.addEventListener('click', closeZoom);
+    backdrop.addEventListener('click', closeZoom);
+  }
+
+  window.addEventListener('resize', function () { if (zoom) place(zoom.wrap, zoomRect()); });
+
   document.querySelector('.projects').addEventListener('click', function (e) {
+    var card = e.target.closest('.project');
+    if (e.target.closest('.name')) { openCard(card); return; }
     var link = e.target.closest('a[data-open-url]');
     if (link) {
       if (e.ctrlKey || e.metaKey || e.shiftKey || e.button) return; // let "open in new tab" work normally
       e.preventDefault();
-      var card = link.closest('.project');
       openWin({ key: link.href, title: link.textContent.replace(/\s*↗$/, ''), url: link.href, card: card });
       return;
     }
     if (e.target.closest('a')) return;
-    if (!e.target.closest('.open') && String(window.getSelection())) return; // user is selecting text
-    openCard(e.target.closest('.project'));
+    if (String(window.getSelection())) return; // the user is selecting text
+    openZoom(card);
+  });
+  document.querySelector('.projects').addEventListener('keydown', function (e) {
+    if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('project')) { e.preventDefault(); openZoom(e.target); }
   });
 
   // Floating back-to-top button: shown once the page is scrolled
