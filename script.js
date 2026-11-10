@@ -253,7 +253,9 @@
     'Chart.js': ['chartdotjs'], 'Framer Motion': ['framer'], 'Turborepo': ['turborepo'], 'Remix': ['remix'],
     'Tailwind': ['tailwindcss'], 'Flutter': ['flutter'], 'Figma API': ['figma'], 'Slack API': ['slack'],
     'Strapi': ['strapi'], 'Nuxt': ['nuxtdotjs'], 'Vue': ['vuedotjs'], 'Express.js': ['express'],
-    'React Hook Form + Zod': ['reacthookform', 'zod'], 'NestJS + AWS': ['nestjs', 'amazonwebservices']
+    'React Hook Form + Zod': ['reacthookform', 'zod'], 'NestJS + AWS': ['nestjs', 'amazonwebservices'],
+    // logos taken from each project's own site (not in the icon set)
+    'Zustand': ['zustand.png'], 'material-react-table': ['mrt.png'], 'react-window': ['reactwindow.svg']
   };
   document.querySelectorAll('.chips--sm li').forEach(function (li) {
     var name = li.textContent.trim();
@@ -264,7 +266,7 @@
     li.className = 'logo';
     slugs.forEach(function (s) {
       var img = document.createElement('img');
-      img.src = 'img/tech/' + s + '.svg';
+      img.src = 'img/tech/' + (s.indexOf('.') > -1 ? s : s + '.svg');
       img.alt = '';
       img.width = 20; img.height = 20;
       img.loading = 'lazy'; img.decoding = 'async'; img.draggable = false;
@@ -272,7 +274,9 @@
     });
     if (m && TECH[m[1]]) li.appendChild(el('sup', '', m[2]));
     // the slide-out shows the plain name; the version is already beside the logo
-    li.appendChild(el('span', 'chip__name', m && TECH[m[1]] ? m[1] : name)); // always in the DOM for screen readers
+    var nameBox = el('span', 'chip__name'); // an outer grid track animates 0fr -> 1fr, so the width follows the real text width
+    nameBox.appendChild(el('span', '', m && TECH[m[1]] ? m[1] : name));
+    li.appendChild(nameBox); // always in the DOM for screen readers
   });
 
   // ---- Skills: a logo tile in front of the name (the name stays visible).
@@ -286,7 +290,8 @@
     'Go (Gin) APIs': ['go', 'gin'], 'NestJS': ['nestjs'], 'Node / Express': ['nodedotjs', 'express'],
     'PostgreSQL': ['postgresql'], 'Redis': ['redis'], 'Kafka': ['apachekafka'], 'AWS': ['amazonwebservices'],
     'Strapi CMS': ['strapi'], 'ESLint / Prettier': ['eslint', 'prettier'], 'Conventional Commits': ['conventionalcommits'],
-    'GitLab CI': ['gitlab'], 'Docker': ['docker'], 'Asana · Trello · GitLab': ['asana', 'trello', 'gitlab']
+    'GitLab CI': ['gitlab'], 'Docker': ['docker'], 'Asana · Trello · GitLab': ['asana', 'trello', 'gitlab'],
+    'Zustand': ['zustand.png'], 'material-react-table': ['mrt.png']
   };
   document.querySelectorAll('#skills .chips li').forEach(function (li) {
     var slugs = SKILL[li.textContent.trim()];
@@ -295,7 +300,7 @@
     slugs.slice().reverse().forEach(function (s) {
       var tile = el('span', 'chip__ico');
       var img = document.createElement('img');
-      img.src = 'img/tech/' + s + '.svg';
+      img.src = 'img/tech/' + (s.indexOf('.') > -1 ? s : s + '.svg');
       img.alt = ''; img.width = 15; img.height = 15;
       img.loading = 'lazy'; img.decoding = 'async'; img.draggable = false;
       tile.appendChild(img);
