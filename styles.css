@@ -176,6 +176,10 @@ p { margin: 0 0 1em; }
 /* the photo is dark, so a dark glass can be thinner and show more of the site */
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .project--glass { --glass-a: 72%; --glass-b: 60%; --glass-dip: 0%; --glass-blur: 3px; --glass-blur-hover: 2px; --glass-bright: .7; --glass-tshadow: 0 1px 2px rgba(0, 0, 0, .75), 0 0 10px rgba(0, 0, 0, .7), 0 0 22px rgba(0, 0, 0, .5); } }
 :root[data-theme="dark"] .project--glass { --glass-a: 72%; --glass-b: 60%; --glass-dip: 0%; --glass-blur: 3px; --glass-blur-hover: 2px; --glass-bright: .7; --glass-tshadow: 0 1px 2px rgba(0, 0, 0, .75), 0 0 10px rgba(0, 0, 0, .7), 0 0 22px rgba(0, 0, 0, .5); }
+/* a card whose photo is dark and calm can show more of it */
+.project--glass.project--clear { --glass-a: 68%; --glass-b: 56%; --glass-dip: 0%; --glass-blur: 1.5px; --glass-blur-hover: 1px; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .project--glass.project--clear { --glass-a: 56%; --glass-b: 44%; --glass-blur: 1.5px; --glass-blur-hover: 1px; --glass-bright: .8; } }
+:root[data-theme="dark"] .project--glass.project--clear { --glass-a: 56%; --glass-b: 44%; --glass-blur: 1.5px; --glass-blur-hover: 1px; --glass-bright: .8; }
 @media print { .project__bg, .project__glass { display: none; } }
 
 /* corner icon on every card: "click to enlarge" */
