@@ -106,8 +106,8 @@
   function buildPage(card, external) {
     var page = el('div', 'mock');
     var head = card.querySelector('header').cloneNode(true);
-    var openBtn = head.querySelector('.open');
-    if (openBtn) openBtn.remove();
+    var nameBtn = head.querySelector('.name');
+    if (nameBtn) nameBtn.replaceWith(document.createTextNode(nameBtn.textContent + ' '));
     page.appendChild(head);
     ['.bullets', '.chips'].forEach(function (sel) {
       var part = card.querySelector(sel);
