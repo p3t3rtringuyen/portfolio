@@ -247,6 +247,39 @@
     openWin({ key: titleOf(card), title: titleOf(card), url: card.dataset.url, external: card.dataset.external, card: card });
   }
 
+  // ---- Tech stack chips: replace the names by brand logos (img/tech/*.svg).
+  // The name stays in the DOM as hidden text and as the tooltip. A technology
+  // without a logo in the icon set keeps its text chip.
+  var TECH = {
+    'Next.js': ['nextdotjs'], 'React': ['react'], 'TypeScript': ['typescript'], 'MUI': ['mui'],
+    'TanStack Query': ['reactquery'], 'Keycloak': ['keycloak'], 'Storybook': ['storybook'],
+    'Go': ['go'], 'Gin': ['gin'], 'PostgreSQL': ['postgresql'], 'Redis': ['redis'], 'Kafka': ['apachekafka'],
+    'Swagger': ['swagger'], 'Prometheus': ['prometheus'], 'Zod': ['zod'], 'Swiper': ['swiper'],
+    'Chart.js': ['chartdotjs'], 'Framer Motion': ['framer'], 'Turborepo': ['turborepo'], 'Remix': ['remix'],
+    'Tailwind': ['tailwindcss'], 'Flutter': ['flutter'], 'Figma API': ['figma'], 'Slack API': ['slack'],
+    'Strapi': ['strapi'], 'Nuxt': ['nuxtdotjs'], 'Vue': ['vuedotjs'], 'Express.js': ['express'],
+    'React Hook Form + Zod': ['reacthookform', 'zod'], 'NestJS + AWS': ['nestjs', 'amazonwebservices']
+  };
+  document.querySelectorAll('.chips--sm li').forEach(function (li) {
+    var name = li.textContent.trim();
+    var m = name.match(/^(.*\S)\s+(\d+)$/); // "Next.js 15" -> name + version
+    var slugs = TECH[name] || (m && TECH[m[1]]);
+    if (!slugs) return;
+    li.textContent = '';
+    li.className = 'logo';
+    li.title = name;
+    slugs.forEach(function (s) {
+      var img = document.createElement('img');
+      img.src = 'img/tech/' + s + '.svg';
+      img.alt = '';
+      img.width = 20; img.height = 20;
+      img.loading = 'lazy'; img.decoding = 'async'; img.draggable = false;
+      li.appendChild(img);
+    });
+    if (m && TECH[m[1]]) li.appendChild(el('sup', '', m[2]));
+    li.appendChild(el('span', 'sr', name));
+  });
+
   // The project's name is a button that opens the mini-browser window.
   projects.forEach(function (card) {
     var h3 = card.querySelector('h3');

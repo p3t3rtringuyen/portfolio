@@ -146,6 +146,13 @@ p { margin: 0 0 1em; }
 .project .name:hover, .project .name:focus-visible { color: var(--accent); }
 .project .name:hover::after, .project .name:focus-visible::after { opacity: 1; }
 
+/* tech logos: every logo sits on a light tile so dark brand colours (Next.js, Express…) read in both themes */
+.project .chips li.logo { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; background: #f3f5fb; border: 1px solid rgba(255, 255, 255, .5); box-shadow: 0 1px 2px rgba(0, 0, 0, .18); transition: transform .2s, box-shadow .2s; }
+.project .chips li.logo:hover { transform: translateY(-2px) scale(1.06); box-shadow: 0 6px 14px rgba(0, 0, 0, .25); }
+.chips li.logo img { display: block; width: 20px; height: 20px; pointer-events: none; user-select: none; -webkit-user-drag: none; }
+.chips li.logo sup { margin-left: -2px; color: #4b556e; font: 700 10.5px/1 var(--mono); }
+.sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
 /* frosted-glass card: blurred site screenshot behind a glass layer; content sits above both */
 .project--glass { --glass-a: 80%; --glass-b: 70%; --glass-dip: 6%; --glass-blur-hover: 1.5px; --glass-bright: 1; isolation: isolate; overflow: hidden; border-color: color-mix(in srgb, var(--accent) 38%, var(--line)); }
 .project__bg { position: absolute; inset: -14px; z-index: -2; pointer-events: none; }
