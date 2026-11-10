@@ -288,6 +288,12 @@
     b.title = 'Open in a mini-browser window';
     h3.replaceChild(b, h3.firstChild);
     card.tabIndex = 0;
+    // Corner icon: tells the visitor the card can be clicked to enlarge it.
+    var hint = el('span', 'project__expand');
+    hint.setAttribute('aria-hidden', 'true');
+    hint.title = 'Click the card to enlarge it';
+    hint.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7.5 7.5M3 21l7.5-7.5"/></svg>';
+    card.appendChild(hint);
   });
 
   // ---- Zoom + flip: the rest of the card zooms to the centre; a second click
@@ -335,6 +341,10 @@
       if (part) front.appendChild(part.cloneNode(true));
     });
     front.appendChild(el('p', 'zoom__hint', 'Click the card to flip it and see the website ↻'));
+    var badge = el('span', 'zoom__badge', 'Flip ');
+    badge.setAttribute('aria-hidden', 'true');
+    badge.appendChild(el('i', '', '↻'));
+    front.appendChild(badge);
     var x1 = el('button', 'zoom__x', '✕');
     x1.type = 'button'; x1.setAttribute('aria-label', 'Close');
     front.appendChild(x1);
