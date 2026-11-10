@@ -383,6 +383,14 @@
     if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('project')) { e.preventDefault(); openZoom(e.target); }
   });
 
+  // Deterrents only: no web page can stop a screenshot, a screen recording or a
+  // determined "save as". These remove the one-click ways to take the portrait.
+  document.querySelectorAll('.hero__media, .hero__shield').forEach(function (n) {
+    ['contextmenu', 'dragstart', 'selectstart'].forEach(function (t) {
+      n.addEventListener(t, function (e) { e.preventDefault(); });
+    });
+  });
+
   // Floating back-to-top button: shown once the page is scrolled
   var toTop = document.querySelector('.totop');
   function toggleToTop() { toTop.classList.toggle('show', window.scrollY > 400); }

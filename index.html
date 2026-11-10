@@ -10,7 +10,8 @@
   <meta property="og:description" content="React / Next.js / TypeScript. Design systems, data-heavy tables, performance, and leading small teams.">
   <meta property="og:type" content="website">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=5">
+  <link rel="preload" as="image" type="image/avif" href="img/hero-800.avif" imagesrcset="img/hero-480.avif 480w, img/hero-800.avif 800w, img/hero-1000.avif 1000w" imagesizes="(min-width: 1152px) 1120px, 100vw" fetchpriority="high">
+  <link rel="stylesheet" href="styles.css?v=8">
   <script>
     // Apply the saved theme before first paint to avoid a flash.
     try { var t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
@@ -39,9 +40,22 @@
   <main id="main">
     <!-- HERO -->
     <section class="hero wrap">
-      <p class="eyebrow"><span class="dot"></span> Open to senior frontend roles &amp; freelance projects</p>
-      <h1>I build fast, data-heavy web apps that people use all day.</h1>
-      <p class="lead">I'm <strong>Tri Nguyen</strong>, a Senior Frontend Engineer with 10+ years of experience. I lead small teams and ship React / Next.js products — from an Amazon Ads management platform to e-commerce back-office suites and a national bank's website.</p>
+      <div class="hero__stage">
+        <!-- Decorative portrait. width/height reserve the space (no layout shift);
+             AVIF → WebP → JPEG at three widths, the browser picks one. -->
+        <picture class="hero__media" aria-hidden="true">
+          <source type="image/avif" srcset="img/hero-480.avif 480w, img/hero-800.avif 800w, img/hero-1000.avif 1000w" sizes="(min-width: 1152px) 1120px, 100vw">
+          <source type="image/webp" srcset="img/hero-480.webp 480w, img/hero-800.webp 800w, img/hero-1000.webp 1000w" sizes="(min-width: 1152px) 1120px, 100vw">
+          <img src="img/hero-1000.jpg" srcset="img/hero-480.jpg 480w, img/hero-800.jpg 800w, img/hero-1000.jpg 1000w" sizes="(min-width: 1152px) 1120px, 100vw" width="1000" height="667" alt="" decoding="async" fetchpriority="high" draggable="false">
+        </picture>
+        <div class="hero__shield"></div>
+        <div class="hero__copy">
+          <p class="eyebrow"><span class="dot"></span> Open to senior frontend roles &amp; freelance projects</p>
+          <h1>I build fast, data-heavy web apps that people use all day.</h1>
+          <p class="lead">I'm <strong>Tri Nguyen</strong>, a Senior Frontend Engineer with 10+ years of experience. I lead small teams and ship React / Next.js products — from an Amazon Ads management platform to e-commerce back-office suites and a national bank's website.</p>
+        </div>
+        <span class="hero__mark" aria-hidden="true">© Tri Nguyen · p3t3rtringuyen.dev</span>
+      </div>
       <div class="cta">
         <a class="btn" href="#projects">See my work</a>
         <a class="btn btn--ghost" href="mailto:p3t3rtringuyen@gmail.com">p3t3rtringuyen@gmail.com</a>
@@ -348,6 +362,6 @@
     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
   </a>
 
-  <script src="script.js?v=5" defer></script>
+  <script src="script.js?v=6" defer></script>
 </body>
 </html>

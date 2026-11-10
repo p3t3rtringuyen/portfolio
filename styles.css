@@ -64,6 +64,37 @@ p { margin: 0 0 1em; }
 .stats b { display: block; font-size: 2rem; letter-spacing: -.03em; color: var(--accent); }
 .stats span { color: var(--muted); font-size: 14px; }
 
+/* hero stage: portrait photo behind the intro copy */
+.hero__stage {
+  --text: #e8ecf8; --muted: #c3cce6; --surface: rgba(11, 16, 32, .62); --line: rgba(255, 255, 255, .22);
+  position: relative; isolation: isolate; overflow: hidden; display: flex; align-items: center;
+  min-height: clamp(440px, 46vw, 580px); margin-bottom: 28px; border-radius: 24px; color: var(--text);
+  border: 1px solid var(--line); box-shadow: var(--shadow);
+  /* 32px blurred preview paints instantly while the real photo streams in */
+  background: #0b1020 url("data:image/webp;base64,UklGRiYBAABXRUJQVlA4IBoBAACwBgCdASogABUAPu1gqE2ppaOiMAgBMB2JbACdMoMlyZW7qs+BYPe9I21m4+OkhNj28ZuQxnOi0dCUD65pAAD+nuVIAZpeJeW8tl1rznbGlrBd7gKYaHaFIQIhBLhS9zlWbq2snuVrCQ7jH+n/1zpnZVLR7N1vGBS6AX67Ry5/s2/EBrR+3v7E9Xuah0mMElXxGWh34b9JuO/xNU3Af3auXJjZ/WSGCh3ZgUaixACUTi7eDBl9rv8SYGDrVO4dwx1Yas11v/7nZGAk4tpjrNhv/l4E77uVcj4VYgX1itMn8LcK3qGTMdQXyfwa2hJSDAz/yepsF2QU83yT5QIHNwN3g4qzFgrDnqz8ICit12KBybYCosWmmy+AAAA=") center / cover;
+}
+.hero__media, .hero__media img { position: absolute; inset: 0; width: 100%; height: 100%; }
+.hero__media img { object-fit: cover; object-position: 74% 30%; user-select: none; -webkit-user-select: none; -webkit-user-drag: none; -webkit-touch-callout: none; pointer-events: none; }
+/* Transparent layer above the photo: darkens it for legible text and takes every pointer event instead of the <img>. */
+.hero__shield { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(8, 12, 26, .94) 0%, rgba(8, 12, 26, .82) 36%, rgba(8, 12, 26, .26) 66%, rgba(8, 12, 26, 0) 100%); }
+.hero__copy { position: relative; max-width: min(700px, 100%); padding: clamp(28px, 5vw, 64px); }
+.hero__copy .eyebrow { backdrop-filter: blur(6px); }
+.hero__copy h1 { margin: 22px 0; }
+.hero__copy .lead { margin-bottom: 0; }
+.hero__mark { position: absolute; right: 16px; bottom: 12px; font: 500 11px var(--mono); letter-spacing: .04em; color: rgba(255, 255, 255, .6); text-shadow: 0 1px 3px rgba(0, 0, 0, .7); pointer-events: none; user-select: none; }
+@media (max-width: 1024px) {
+  /* Tablet and phone: the photo is its own block on top and the copy sits below it,
+     so however long the text is, it can never cover the face. */
+  .hero__stage { display: block; min-height: 0; background-image: none; --photo-h: clamp(260px, 52vw, 420px); }
+  .hero__media { position: relative; display: block; height: var(--photo-h); }
+  .hero__media img { object-position: 72% 22%; }
+  .hero__shield { bottom: auto; height: var(--photo-h); background: linear-gradient(180deg, rgba(8, 12, 26, 0) 40%, rgba(8, 12, 26, .96) 100%); }
+  .hero__copy { max-width: 100%; margin-top: -56px; padding: 0 clamp(20px, 5vw, 44px) 40px; }
+  .hero__copy h1 { margin: 16px 0; }
+}
+@media (max-width: 480px) { .hero__stage { border-radius: 18px; } .hero__mark { display: none; } }
+@media print { .hero__media, .hero__shield, .hero__mark { display: none; } .hero__stage { background: none; color: #000; } }
+
 /* sections */
 .section { padding: 72px 0 8px; }
 .section__title { display: flex; align-items: baseline; gap: 14px; font-size: clamp(1.6rem, 3vw, 2.2rem); margin-bottom: 28px; }
