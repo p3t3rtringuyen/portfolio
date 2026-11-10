@@ -472,20 +472,6 @@
     if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('project')) { e.preventDefault(); openZoom(e.target); }
   });
 
-  // ---- Copy e-mail address (for visitors without Gmail) ------------------
-  document.querySelectorAll('[data-copy]').forEach(function (b) {
-    var label = b.textContent;
-    b.addEventListener('click', function () {
-      function done(ok) {
-        b.textContent = ok ? 'Copied ✓' : 'Press Ctrl+C: ' + b.dataset.copy;
-        setTimeout(function () { b.textContent = label; }, 2200);
-      }
-      if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(b.dataset.copy).then(function () { done(true); }, function () { done(false); });
-      } else { done(false); }
-    });
-  });
-
   // ---- Team gallery: tilt on hover + lightbox -----------------------------
   var tiles = Array.prototype.slice.call(document.querySelectorAll('.tile'));
   var canTilt = window.matchMedia('(hover: hover) and (prefers-reduced-motion: no-preference)').matches;
