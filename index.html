@@ -11,7 +11,7 @@
   <meta property="og:type" content="website">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preload" as="image" type="image/avif" href="img/hero-800.avif" imagesrcset="img/hero-480.avif 480w, img/hero-800.avif 800w, img/hero-1000.avif 1000w" imagesizes="(min-width: 1152px) 1120px, 100vw" fetchpriority="high">
-  <link rel="stylesheet" href="styles.css?v=20">
+  <link rel="stylesheet" href="styles.css?v=21">
   <script>
     // Apply the saved theme before first paint to avoid a flash.
     try { var t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
@@ -320,12 +320,24 @@
           <ul class="chips chips--sm"><li>Nuxt</li><li>Vue</li><li>Express.js</li></ul>
         </article>
 
-        <article class="project" data-cat="client" data-external="https://www.sentosa.com.sg/">
+        <article class="project project--glass" data-cat="client" data-external="https://www.sentosa.com.sg/">
+          <picture class="project__bg" aria-hidden="true">
+            <source type="image/avif" srcset="img/sentosa-640.avif 640w, img/sentosa-960.avif 960w" sizes="(min-width: 900px) 560px, 100vw">
+            <source type="image/webp" srcset="img/sentosa-640.webp 640w, img/sentosa-960.webp 960w" sizes="(min-width: 900px) 560px, 100vw">
+            <img src="img/sentosa-640.jpg" srcset="img/sentosa-640.jpg 640w, img/sentosa-960.jpg 960w" sizes="(min-width: 900px) 560px, 100vw" width="960" height="399" alt="" loading="lazy" decoding="async" draggable="false">
+          </picture>
+          <span class="project__glass" aria-hidden="true"></span>
           <header>
             <span class="tag tag--alt">Client</span>
             <h3>Sentosa <small>sentosa.com.sg</small></h3>
-            <p>Official website of Sentosa, Singapore's island resort destination.</p>
+            <p>Official website of Sentosa, Singapore's island resort destination: attractions, deals, shop and membership.</p>
           </header>
+          <ul class="bullets">
+            <li><b>Frontend developer</b> on the customer-facing website.</li>
+            <li>Built responsive pages and reusable components for the attraction, deal, shop and membership journeys.</li>
+            <li>Worked on accessibility, performance and cross-browser behaviour for a high-traffic tourism audience.</li>
+          </ul>
+          <ul class="chips chips--sm"><li>React</li><li>Next.js</li><li>TypeScript</li><li>Tailwind</li></ul>
         </article>
       </div>
     </section>
