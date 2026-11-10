@@ -11,7 +11,7 @@
   <meta property="og:type" content="website">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preload" as="image" type="image/avif" href="img/hero-800.avif" imagesrcset="img/hero-480.avif 480w, img/hero-800.avif 800w, img/hero-1000.avif 1000w" imagesizes="(min-width: 1152px) 1120px, 100vw" fetchpriority="high">
-  <link rel="stylesheet" href="styles.css?v=18">
+  <link rel="stylesheet" href="styles.css?v=19">
   <script>
     // Apply the saved theme before first paint to avoid a flash.
     try { var t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
@@ -284,7 +284,13 @@
           <ul class="chips chips--sm"><li>React</li><li>Tailwind</li><li>Figma API</li><li>Slack API</li><li>NestJS + AWS</li></ul>
         </article>
 
-        <article class="project" data-cat="client" data-external="https://www.techcombank.com">
+        <article class="project project--glass" data-cat="client" data-external="https://www.techcombank.com">
+          <picture class="project__bg" aria-hidden="true">
+            <source type="image/avif" srcset="img/techcombank-640.avif 640w, img/techcombank-960.avif 960w" sizes="(min-width: 900px) 560px, 100vw">
+            <source type="image/webp" srcset="img/techcombank-640.webp 640w, img/techcombank-960.webp 960w" sizes="(min-width: 900px) 560px, 100vw">
+            <img src="img/techcombank-640.jpg" srcset="img/techcombank-640.jpg 640w, img/techcombank-960.jpg 960w" sizes="(min-width: 900px) 560px, 100vw" width="960" height="476" alt="" loading="lazy" decoding="async" draggable="false">
+          </picture>
+          <span class="project__glass" aria-hidden="true"></span>
           <header>
             <span class="tag tag--alt">Client · 2020–2022</span>
             <h3>Techcombank website revamp</h3>
