@@ -194,6 +194,10 @@ p { margin: 0 0 1em; }
 .project--glass.project--clear { --glass-a: 68%; --glass-b: 56%; --glass-dip: 0%; --glass-blur: 1.5px; --glass-blur-hover: 1px; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .project--glass.project--clear { --glass-a: 56%; --glass-b: 44%; --glass-blur: 1.5px; --glass-blur-hover: 1px; --glass-bright: .8; } }
 :root[data-theme="dark"] .project--glass.project--clear { --glass-a: 56%; --glass-b: 44%; --glass-blur: 1.5px; --glass-blur-hover: 1px; --glass-bright: .8; }
+/* bright, busy screenshots: more blur and a thicker glass so they read as a soft wash of colour */
+.project--glass.project--soft { --glass-a: 88%; --glass-b: 80%; --glass-blur: 7px; --glass-blur-hover: 5px; --glass-dip: 4%; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .project--glass.project--soft { --glass-a: 82%; --glass-b: 72%; --glass-blur: 7px; --glass-blur-hover: 5px; --glass-bright: .62; } }
+:root[data-theme="dark"] .project--glass.project--soft { --glass-a: 82%; --glass-b: 72%; --glass-blur: 7px; --glass-blur-hover: 5px; --glass-bright: .62; }
 @media print { .project__bg, .project__glass { display: none; } }
 
 /* corner icon on every card: "click to enlarge" */
