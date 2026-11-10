@@ -271,7 +271,8 @@
       li.appendChild(img);
     });
     if (m && TECH[m[1]]) li.appendChild(el('sup', '', m[2]));
-    li.appendChild(el('span', 'chip__name', name)); // slides out on hover; always in the DOM for screen readers
+    // the slide-out shows the plain name; the version is already beside the logo
+    li.appendChild(el('span', 'chip__name', m && TECH[m[1]] ? m[1] : name)); // always in the DOM for screen readers
   });
 
   // ---- Skills: a logo tile in front of the name (the name stays visible).

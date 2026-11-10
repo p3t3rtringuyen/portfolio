@@ -116,7 +116,7 @@ p { margin: 0 0 1em; }
 .facts dd { margin: 0; font-weight: 500; }
 
 .chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
-.chips li { padding: 4px 12px; border-radius: 999px; background: var(--accent-soft); color: var(--text); font-size: 13.5px; font-weight: 500; }
+.chips li { display: inline-flex; align-items: center; padding: 4px 12px; border-radius: 999px; background: var(--accent-soft); color: var(--text); font-size: 13.5px; font-weight: 500; }
 .chips--sm li { font-size: 12.5px; padding: 3px 10px; }
 
 /* projects */
@@ -168,7 +168,7 @@ p { margin: 0 0 1em; }
 /* hover: the technology's name slides out from under the logo chip */
 .chips li.logo { position: relative; z-index: 0; }
 .chips li.logo:hover, .chips li.logo:focus-within { z-index: 6; }
-.chip__name { position: absolute; top: 0; bottom: 0; left: 100%; margin-left: -16px; display: flex; align-items: center; padding: 0 14px 0 22px; border-radius: 0 999px 999px 0; background: #f3f5fb; color: #1b2440; box-shadow: 0 6px 14px rgba(0, 0, 0, .25); font: 700 12px/1 var(--font); white-space: nowrap; z-index: -1; clip-path: inset(-8px 100% -8px 0); opacity: 0; transform: translateX(-10px); transition: clip-path .35s cubic-bezier(.2, .8, .2, 1), transform .35s cubic-bezier(.2, .8, .2, 1), opacity .2s; pointer-events: none; }
+.chip__name { position: absolute; top: -1px; bottom: -1px; left: 100%; margin-left: -16px; display: flex; align-items: center; padding: 0 14px 0 22px; border-radius: 0 999px 999px 0; background: #f3f5fb; color: #1b2440; box-shadow: 0 6px 14px rgba(0, 0, 0, .25); font: 700 12px/1 var(--font); white-space: nowrap; z-index: -1; clip-path: inset(-8px 100% -8px 0); opacity: 0; transform: translateX(-10px); transition: clip-path .35s cubic-bezier(.2, .8, .2, 1), transform .35s cubic-bezier(.2, .8, .2, 1), opacity .2s; pointer-events: none; }
 .chips li.logo:hover .chip__name { clip-path: inset(-8px -14px -8px 0); opacity: 1; transform: none; }
 .chips li.logo img { display: block; width: 20px; height: 20px; pointer-events: none; user-select: none; -webkit-user-drag: none; }
 .chips li.logo sup { margin-left: -2px; color: #4b556e; font: 700 10.5px/1 var(--mono); }
