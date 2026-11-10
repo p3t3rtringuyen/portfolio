@@ -129,7 +129,7 @@ p { margin: 0 0 1em; }
 .project--feature .bullets { columns: 2; column-gap: 32px; }
 .project--feature .bullets li { break-inside: avoid; }
 .project h3 { font-size: 1.3rem; margin: 8px 0 8px; }
-.project h3 small { display: block; font: 500 .8rem var(--mono); color: var(--muted); margin-top: 4px; letter-spacing: 0; }
+.project h3 small { overflow-wrap: anywhere; display: block; font: 500 .8rem var(--mono); color: var(--muted); margin-top: 4px; letter-spacing: 0; }
 .project header p { color: var(--muted); margin: 0; }
 .tag { display: inline-block; font: 600 11.5px var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--accent); }
 .tag--alt { color: var(--muted); }

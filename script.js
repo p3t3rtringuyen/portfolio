@@ -115,7 +115,7 @@
     });
     var why = el('p', 'mock__why', external
       ? 'The live site does not allow being shown inside another page, so this window shows the case study instead.'
-      : 'Internal tool: it has no public URL, so this window shows the case study instead.');
+      : 'This window shows the case study for the project.');
     page.insertBefore(why, page.children[1] || null);
     if (external) {
       var a = el('a', 'btn', 'Visit ' + external.replace(/^https?:\/\/(www\.)?/, '') + ' ↗');
