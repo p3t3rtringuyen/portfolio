@@ -146,6 +146,22 @@ p { margin: 0 0 1em; }
 .project .name:hover, .project .name:focus-visible { color: var(--accent); }
 .project .name:hover::after, .project .name:focus-visible::after { opacity: 1; }
 
+/* frosted-glass card: blurred site screenshot behind a glass layer; content sits above both */
+.project--glass { --glass-a: 80%; --glass-b: 70%; --glass-dip: 6%; --glass-blur-hover: 1.5px; --glass-bright: 1; isolation: isolate; overflow: hidden; border-color: color-mix(in srgb, var(--accent) 38%, var(--line)); }
+.project__bg { position: absolute; inset: -14px; z-index: -2; pointer-events: none; }
+.project__bg img { display: block; width: 100%; height: 100%; object-fit: cover; filter: blur(3px) saturate(1.3) brightness(var(--glass-bright)); transform: scale(1.05); transition: filter .7s, transform 1s cubic-bezier(.2, .7, .2, 1); user-select: none; -webkit-user-drag: none; }
+.project__glass { position: absolute; inset: 0; z-index: -1; pointer-events: none; backdrop-filter: blur(8px) saturate(1.5); -webkit-backdrop-filter: blur(8px) saturate(1.5); background: linear-gradient(155deg, color-mix(in srgb, var(--surface) var(--glass-a), transparent), color-mix(in srgb, var(--surface) var(--glass-b), transparent)); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .22), inset 0 0 0 1px rgba(255, 255, 255, .06); transition: background .6s; }
+/* hover: the site comes into focus, but the glass never gets thinner than 66% so text keeps its contrast */
+.project--glass:hover .project__bg img { filter: blur(var(--glass-blur-hover)) saturate(1.35) brightness(var(--glass-bright)); transform: scale(1.1); }
+.project--glass:hover .project__glass { background: linear-gradient(155deg, color-mix(in srgb, var(--surface) calc(var(--glass-a) - var(--glass-dip)), transparent), color-mix(in srgb, var(--surface) calc(var(--glass-b) - var(--glass-dip)), transparent)); }
+.project--glass .tag { color: var(--accent); }
+.project--glass .bullets, .project--glass header p { color: var(--text); opacity: .86; }
+.project--glass .chips li { background: color-mix(in srgb, var(--accent-soft) 86%, transparent); }
+/* the photo is dark, so a dark glass can be thinner and show more of the site */
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .project--glass { --glass-a: 72%; --glass-b: 60%; --glass-dip: 0%; --glass-blur-hover: 2px; --glass-bright: .7; } }
+:root[data-theme="dark"] .project--glass { --glass-a: 72%; --glass-b: 60%; --glass-dip: 0%; --glass-blur-hover: 2px; --glass-bright: .7; }
+@media print { .project__bg, .project__glass { display: none; } }
+
 /* zoomed card with a flip to the website */
 .zoom { position: fixed; inset: 0; z-index: 100; }
 .zoom__backdrop { position: absolute; inset: 0; background: rgba(5, 8, 18, .66); backdrop-filter: blur(6px); opacity: 0; transition: opacity .4s; }
