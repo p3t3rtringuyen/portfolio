@@ -135,6 +135,7 @@ p { margin: 0 0 1em; }
 .project header p { color: var(--muted); margin: 0; }
 .tag { display: inline-block; font: 600 11.5px var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--accent); }
 .tag--alt { color: var(--muted); }
+.tag b { color: var(--text); font-weight: 800; }
 .bullets { margin: 0; padding-left: 18px; color: var(--muted); font-size: 15px; }
 .bullets li { margin-bottom: 6px; }
 .bullets b { color: var(--text); font-weight: 600; }
