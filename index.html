@@ -11,7 +11,7 @@
   <meta property="og:type" content="website">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preload" as="image" type="image/avif" href="img/hero-800.avif" imagesrcset="img/hero-480.avif 480w, img/hero-800.avif 800w, img/hero-1000.avif 1000w" imagesizes="(min-width: 1152px) 1120px, 100vw" fetchpriority="high">
-  <link rel="stylesheet" href="styles.css?v=41">
+  <link rel="stylesheet" href="styles.css?v=47">
   <script>
     // Apply the saved theme before first paint to avoid a flash.
     try { var t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
@@ -59,7 +59,7 @@
       </div>
       <div class="cta">
         <a class="btn" href="#projects">See my work</a>
-        <a class="btn btn--ghost" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=p3t3rtringuyen%40gmail.com&amp;su=Hello%20Tri%20%E2%80%94%20opportunity" target="_blank" rel="noopener">p3t3rtringuyen@gmail.com</a>
+        <button type="button" class="btn btn--ghost copy" data-copy="p3t3rtringuyen@gmail.com" aria-label="Copy email address p3t3rtringuyen@gmail.com">p3t3rtringuyen@gmail.com<span class="copy__tip" aria-hidden="true">Click to copy</span></button><span class="sr" id="copy-status" role="status" aria-live="polite"></span>
       </div>
       <ul class="stats" aria-label="Highlights">
         <li><b data-count="10" data-suffix="+">10+</b><span>years in web development</span></li>
@@ -71,7 +71,7 @@
 
     <!-- ABOUT -->
     <section id="about" class="wrap section">
-      <h2 class="section__title"><span>01</span> About</h2>
+      <h2 class="section__title"><span><b>01</b></span> About</h2>
       <div class="about">
         <div>
           <p>I'm a detail-oriented frontend engineer who cares about three things: <strong>accessible, responsive interfaces</strong>, <strong>performance you can measure</strong>, and <strong>code the next developer can change safely</strong>.</p>
@@ -93,7 +93,7 @@
 
     <!-- SKILLS -->
     <section id="skills" class="wrap section">
-      <h2 class="section__title"><span>02</span> Skills</h2>
+      <h2 class="section__title"><span><b>02</b></span> Skills</h2>
       <div class="grid grid--3">
         <article class="card">
           <h3>Frontend core</h3>
@@ -136,7 +136,7 @@
 
     <!-- PROJECTS -->
     <section id="projects" class="wrap section">
-      <h2 class="section__title"><span>03</span> Selected projects</h2>
+      <h2 class="section__title"><span><b>03</b></span> Selected projects</h2>
       <p class="section__intro">Production systems I've built or taken a major part in. Internal tools are described by what they do and the engineering behind them — client data and URLs are omitted.</p>
 
       <div class="filters" role="group" aria-label="Filter projects">
@@ -356,7 +356,7 @@
 
     <!-- EXPERIENCE -->
     <section id="experience" class="wrap section">
-      <h2 class="section__title"><span>04</span> Experience</h2>
+      <h2 class="section__title"><span><b>04</b></span> Experience</h2>
       <ol class="timeline">
         <li>
           <time>Now</time>
@@ -388,7 +388,7 @@
 
     <!-- TEAM -->
     <section id="team" class="wrap section">
-      <h2 class="section__title"><span>05</span> Beyond the code</h2>
+      <h2 class="section__title"><span><b>05</b></span> Beyond the code</h2>
       <p class="section__intro">Good software comes from good teams. These are the people and moments behind my work: retreats, year-end parties, shared dinners and badminton on the court.</p>
       <ul class="chips chips--values" aria-label="What I bring to a team">
         <li>Collaboration</li><li>Mentoring</li><li>Team spirit</li><li>Healthy competition</li>
@@ -473,6 +473,6 @@
     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
   </a>
 
-  <script src="script.js?v=40" defer></script>
+  <script src="script.js?v=47" defer></script>
 </body>
 </html>

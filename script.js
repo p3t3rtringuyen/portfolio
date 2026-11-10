@@ -106,8 +106,6 @@
   function buildPage(card, external) {
     var page = el('div', 'mock');
     var head = card.querySelector('header').cloneNode(true);
-    var nameBtn = head.querySelector('.name');
-    if (nameBtn) nameBtn.replaceWith(document.createTextNode(nameBtn.textContent + ' '));
     page.appendChild(head);
     ['.bullets', '.chips'].forEach(function (sel) {
       var part = card.querySelector(sel);
@@ -243,9 +241,6 @@
   });
 
   function titleOf(card) { return card.querySelector('h3').firstChild.textContent.trim(); }
-  function openCard(card) {
-    openWin({ key: titleOf(card), title: titleOf(card), url: card.dataset.url, external: card.dataset.external, card: card });
-  }
 
   // ---- Tech stack chips: replace the names by brand logos (img/tech/*.svg).
   // The name stays in the DOM as hidden text and as the tooltip. A technology
@@ -267,7 +262,6 @@
     if (!slugs) return;
     li.textContent = '';
     li.className = 'logo';
-    li.title = name;
     slugs.forEach(function (s) {
       var img = document.createElement('img');
       img.src = 'img/tech/' + s + '.svg';
@@ -277,7 +271,7 @@
       li.appendChild(img);
     });
     if (m && TECH[m[1]]) li.appendChild(el('sup', '', m[2]));
-    li.appendChild(el('span', 'sr', name));
+    li.appendChild(el('span', 'chip__name', name)); // slides out on hover; always in the DOM for screen readers
   });
 
   // ---- Skills: a logo tile in front of the name (the name stays visible).
@@ -308,13 +302,8 @@
     });
   });
 
-  // The project's name is a button that opens the mini-browser window.
+  // Every card is focusable and clickable: it zooms. (A project's name is plain text.)
   projects.forEach(function (card) {
-    var h3 = card.querySelector('h3');
-    var b = el('button', 'name', h3.firstChild.textContent.trim());
-    b.type = 'button';
-    b.title = 'Open in a mini-browser window';
-    h3.replaceChild(b, h3.firstChild);
     card.tabIndex = 0;
     // Corner icon: tells the visitor the card can be clicked to enlarge it.
     var hint = el('span', 'project__expand');
@@ -374,8 +363,6 @@
     front.setAttribute('role', 'button');
     front.setAttribute('aria-label', 'Flip the card to see the website of ' + titleOf(card));
     var head = card.querySelector('header').cloneNode(true);
-    var nm = head.querySelector('.name');
-    if (nm) nm.replaceWith(document.createTextNode(nm.textContent + ' '));
     front.appendChild(head);
     ['.bullets', '.chips'].forEach(function (sel) {
       var part = card.querySelector(sel);
@@ -456,7 +443,6 @@
 
   document.querySelector('.projects').addEventListener('click', function (e) {
     var card = e.target.closest('.project');
-    if (e.target.closest('.name')) { openCard(card); return; }
     var link = e.target.closest('a[data-open-url]');
     if (link) {
       if (e.ctrlKey || e.metaKey || e.shiftKey || e.button) return; // let "open in new tab" work normally
@@ -569,6 +555,65 @@
       n.addEventListener(t, function (e) { e.preventDefault(); });
     });
   });
+
+  // ---- Copy the e-mail address: tooltip says "Click to copy", then "Copied".
+  document.querySelectorAll('[data-copy]').forEach(function (b) {
+    var tip = b.querySelector('.copy__tip'), status = document.getElementById('copy-status'), timer;
+    function legacyCopy(text) { // plain-http fallback
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;top:-100px;opacity:0';
+      document.body.appendChild(ta); ta.select();
+      var ok = false;
+      try { ok = document.execCommand('copy'); } catch (e) {}
+      ta.remove();
+      return ok;
+    }
+    function show(ok) {
+      tip.textContent = ok ? 'Copied ✓' : 'Press Ctrl+C to copy';
+      if (status) status.textContent = ok ? 'Email address copied' : '';
+      b.classList.add('is-copied');
+      clearTimeout(timer);
+      timer = setTimeout(function () { b.classList.remove('is-copied'); tip.textContent = 'Click to copy'; }, 1800);
+    }
+    b.addEventListener('click', function () {
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(b.dataset.copy).then(function () { show(true); }, function () { show(legacyCopy(b.dataset.copy)); });
+      } else { show(legacyCopy(b.dataset.copy)); }
+    });
+  });
+
+  // ---- Section number badges: centre the digits' ink, not the font's line box.
+  // Browsers with `text-box` do this in CSS; this is the fallback for the rest.
+  // Fonts put digits above or below the middle of their line box (it differs by
+  // system font). Draw the digits at 8x on a canvas, find the real top and bottom
+  // of the ink, and nudge the text so that ink sits in the middle of the circle.
+  function centreBadgeDigits() {
+    if (window.CSS && CSS.supports('text-box', 'trim-both cap alphabetic')) return; // the stylesheet already centres the glyphs
+    var K = 8, cv = document.createElement('canvas'), ctx = cv.getContext('2d', { willReadFrequently: true });
+    document.querySelectorAll('.section__title span').forEach(function (badge) {
+      var cs = getComputedStyle(badge), text = badge.textContent.trim();
+      ctx.font = cs.fontWeight + ' ' + parseFloat(cs.fontSize) * K + 'px ' + cs.fontFamily;
+      var m = ctx.measureText(text);
+      if (m.fontBoundingBoxAscent === undefined) return; // old browser: leave as is
+      var pad = 12, base = Math.ceil(m.fontBoundingBoxAscent) + pad;
+      cv.width = Math.ceil(m.width) + pad * 2; cv.height = base + Math.ceil(m.fontBoundingBoxDescent) + pad;
+      ctx.font = cs.fontWeight + ' ' + parseFloat(cs.fontSize) * K + 'px ' + cs.fontFamily; // resizing resets the context
+      ctx.textBaseline = 'alphabetic'; ctx.fillStyle = '#000';
+      ctx.fillText(text, pad, base);
+      var px = ctx.getImageData(0, 0, cv.width, cv.height).data, top = -1, bottom = -1;
+      for (var y = 0; y < cv.height; y++) {
+        for (var x = 0; x < cv.width; x++) {
+          if (px[(y * cv.width + x) * 4 + 3] > 127) { if (top < 0) top = y; bottom = y; break; }
+        }
+      }
+      if (top < 0) return;
+      var inkAscent = base - top, inkDescent = bottom + 1 - base;
+      var inkBelowCentre = ((m.fontBoundingBoxAscent - m.fontBoundingBoxDescent) - (inkAscent - inkDescent)) / 2 / K;
+      badge.style.setProperty('--dy', (-inkBelowCentre).toFixed(2) + 'px'); // + = move down
+    });
+  }
+  centreBadgeDigits();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(centreBadgeDigits);
 
   // Floating back-to-top button: shown once the page is scrolled
   var toTop = document.querySelector('.totop');
