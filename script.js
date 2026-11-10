@@ -43,7 +43,7 @@
   // Each block fades and rises into place as it scrolls in from the bottom;
   // siblings in the same row are staggered. The classes are removed afterwards
   // so hover styles are not held back by the reveal transition.
-  var targets = document.querySelectorAll('.section__title, .section__intro, .filters, .stats li, .project, .card, .timeline li');
+  var targets = document.querySelectorAll('.section__title, .section__intro, .filters, .stats li, .project, .card, .timeline li, .chips--values, .tile');
   targets.forEach(function (el) {
     var idx = Array.prototype.indexOf.call(el.parentNode.children, el);
     el.style.setProperty('--d', (idx % 3) * 0.1 + 's');
@@ -234,6 +234,7 @@
 
   closeAll.addEventListener('click', function () { wins.slice().forEach(closeWin); });
   document.addEventListener('keydown', function (e) {
+    if (document.body.classList.contains('lb-open')) return; // the photo viewer handles its own keys
     if (e.key === 'Escape' && zoom) { closeZoom(); return; }
     if (e.key === 'Escape' && wins.length) {
       var top = wins.filter(function (o) { return o.el.classList.contains('is-active'); })[0];
@@ -381,6 +382,110 @@
   });
   document.querySelector('.projects').addEventListener('keydown', function (e) {
     if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('project')) { e.preventDefault(); openZoom(e.target); }
+  });
+
+  // ---- Copy e-mail address (for visitors without Gmail) ------------------
+  document.querySelectorAll('[data-copy]').forEach(function (b) {
+    var label = b.textContent;
+    b.addEventListener('click', function () {
+      function done(ok) {
+        b.textContent = ok ? 'Copied ✓' : 'Press Ctrl+C: ' + b.dataset.copy;
+        setTimeout(function () { b.textContent = label; }, 2200);
+      }
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(b.dataset.copy).then(function () { done(true); }, function () { done(false); });
+      } else { done(false); }
+    });
+  });
+
+  // ---- Team gallery: tilt on hover + lightbox -----------------------------
+  var tiles = Array.prototype.slice.call(document.querySelectorAll('.tile'));
+  var canTilt = window.matchMedia('(hover: hover) and (prefers-reduced-motion: no-preference)').matches;
+  if (canTilt) {
+    tiles.forEach(function (t) {
+      t.addEventListener('pointermove', function (e) {
+        var r = t.getBoundingClientRect();
+        var x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+        t.style.transform = 'perspective(900px) rotateY(' + (x * 6).toFixed(2) + 'deg) rotateX(' + (-y * 6).toFixed(2) + 'deg) translateY(-4px)';
+      });
+      t.addEventListener('pointerleave', function () { t.style.transform = ''; });
+    });
+  }
+
+  var lb = el('div', 'lb');
+  lb.setAttribute('role', 'dialog');
+  lb.setAttribute('aria-modal', 'true');
+  lb.setAttribute('aria-label', 'Photo viewer');
+  var lbBg = el('div', 'lb__bg');
+  var lbFig = el('figure', 'lb__fig');
+  var lbPic = el('picture');
+  var lbSrcA = document.createElement('source'); lbSrcA.type = 'image/avif';
+  var lbSrcW = document.createElement('source'); lbSrcW.type = 'image/webp';
+  var lbImg = document.createElement('img'); lbImg.draggable = false;
+  lbPic.appendChild(lbSrcA); lbPic.appendChild(lbSrcW); lbPic.appendChild(lbImg); lbPic.appendChild(el('span', 'lb__shield'));
+  var lbCap = el('figcaption', 'lb__cap');
+  lbFig.appendChild(lbPic); lbFig.appendChild(lbCap);
+  var lbX = el('button', 'lb__x', '✕'); lbX.type = 'button'; lbX.setAttribute('aria-label', 'Close photo viewer');
+  var lbPrev = el('button', 'lb__nav lb__prev', '‹'); lbPrev.type = 'button'; lbPrev.setAttribute('aria-label', 'Previous photo');
+  var lbNext = el('button', 'lb__nav lb__next', '›'); lbNext.type = 'button'; lbNext.setAttribute('aria-label', 'Next photo');
+  [lbBg, lbFig, lbPrev, lbNext, lbX].forEach(function (n) { lb.appendChild(n); });
+  document.body.appendChild(lb);
+  ['contextmenu', 'dragstart', 'selectstart'].forEach(function (t) {
+    lb.addEventListener(t, function (e) { e.preventDefault(); });
+    tiles.forEach(function (tile) { tile.addEventListener(t, function (e) { e.preventDefault(); }); });
+  });
+
+  var lbIndex = 0, lbOpener = null;
+  function lbShow(i, animate) {
+    lbIndex = (i + tiles.length) % tiles.length;
+    var t = tiles[lbIndex], base = 'img/team/' + t.dataset.name + '-' + t.dataset.max;
+    function paint() {
+      lbSrcA.srcset = base + '.avif';
+      lbSrcW.srcset = base + '.webp';
+      lbImg.src = base + '.jpg';
+      lbImg.width = +t.dataset.w; lbImg.height = +t.dataset.h;
+      lbImg.alt = t.dataset.alt;
+      lbCap.textContent = t.dataset.caption;
+      var count = el('small', '', (lbIndex + 1) + ' / ' + tiles.length);
+      lbCap.appendChild(count);
+      lbFig.classList.remove('is-swap');
+    }
+    if (animate) { lbFig.classList.add('is-swap'); setTimeout(paint, 180); } else { paint(); }
+  }
+  function lbOpen(i, opener) {
+    lbOpener = opener;
+    lbShow(i, false);
+    lb.classList.add('is-open');
+    document.body.classList.add('lb-open');
+    lbX.focus({ preventScroll: true });
+  }
+  function lbClose() {
+    lb.classList.remove('is-open');
+    document.body.classList.remove('lb-open');
+    if (lbOpener) lbOpener.focus({ preventScroll: true });
+  }
+  tiles.forEach(function (t, i) { t.addEventListener('click', function () { lbOpen(i, t); }); });
+  lbX.addEventListener('click', lbClose);
+  lbBg.addEventListener('click', lbClose);
+  lbPrev.addEventListener('click', function () { lbShow(lbIndex - 1, true); });
+  lbNext.addEventListener('click', function () { lbShow(lbIndex + 1, true); });
+  document.addEventListener('keydown', function (e) {
+    if (!lb.classList.contains('is-open')) return;
+    if (e.key === 'Escape') lbClose();
+    else if (e.key === 'ArrowLeft') lbShow(lbIndex - 1, true);
+    else if (e.key === 'ArrowRight') lbShow(lbIndex + 1, true);
+    else if (e.key === 'Tab') { // keep focus inside the viewer
+      var ring = [lbPrev, lbNext, lbX], at = ring.indexOf(document.activeElement);
+      e.preventDefault();
+      ring[(at + (e.shiftKey ? ring.length - 1 : 1)) % ring.length].focus();
+    }
+  });
+  var swipeX = null;
+  lb.addEventListener('pointerdown', function (e) { if (e.pointerType === 'touch') swipeX = e.clientX; });
+  lb.addEventListener('pointerup', function (e) {
+    if (swipeX === null) return;
+    var dx = e.clientX - swipeX; swipeX = null;
+    if (Math.abs(dx) > 50) lbShow(lbIndex + (dx < 0 ? 1 : -1), true);
   });
 
   // Deterrents only: no web page can stop a screenshot, a screen recording or a
