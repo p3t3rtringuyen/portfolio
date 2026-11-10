@@ -328,9 +328,22 @@
   // turns it 180° around the vertical axis to show the website on its back.
   var zoom = null;
 
-  function zoomRect() {
-    var w = Math.min(780, window.innerWidth * 0.92), h = Math.min(580, window.innerHeight * 0.84);
+  function centred(w, h) {
     return { left: (window.innerWidth - w) / 2, top: (window.innerHeight - h) / 2, width: w, height: h };
+  }
+  // The back (a website) wants room; the front is exactly as tall as its content.
+  function backRect() {
+    return centred(Math.min(900, window.innerWidth * 0.94), Math.min(640, window.innerHeight * 0.86));
+  }
+  function frontRect(front) {
+    var w = Math.min(780, window.innerWidth * 0.92);
+    var probe = front.cloneNode(true); // measure an unconstrained copy at the target width
+    probe.removeAttribute('tabindex');
+    probe.style.cssText = 'position:absolute;inset:auto;left:-9999px;top:0;height:auto;visibility:hidden;pointer-events:none;width:' + w + 'px;';
+    document.body.appendChild(probe);
+    var h = probe.offsetHeight;
+    probe.remove();
+    return centred(w, Math.min(Math.max(h, 220), window.innerHeight * 0.9));
   }
   function place(node, r) {
     node.style.left = r.left + 'px'; node.style.top = r.top + 'px';
@@ -368,7 +381,6 @@
       var part = card.querySelector(sel);
       if (part) front.appendChild(part.cloneNode(true));
     });
-    front.appendChild(el('p', 'zoom__hint', 'Click the card to flip it and see the website ↻'));
     var badge = el('span', 'zoom__badge', 'Flip ');
     badge.setAttribute('aria-hidden', 'true');
     badge.appendChild(el('i', '', '↻'));
@@ -417,13 +429,16 @@
     document.body.appendChild(root);
     wrap.offsetWidth; // commit the start rect before animating to the centre
     root.classList.add('is-open');
-    place(wrap, zoomRect());
+    place(wrap, frontRect(front));
     front.focus({ preventScroll: true });
 
-    zoom = { root: root, wrap: wrap, card: card };
+    zoom = { root: root, wrap: wrap, card: card, front: front, flipped: false };
 
     function turn(on) {
+      zoom.flipped = on;
       wrap.classList.toggle('is-flipped', on);
+      place(wrap, on ? backRect() : frontRect(front)); // grows for the website, shrinks back to the content
+
       if (on && frame && !frame.src) frame.src = url;
       (on ? bFlip : front).focus({ preventScroll: true });
     }
@@ -435,7 +450,9 @@
     backdrop.addEventListener('click', closeZoom);
   }
 
-  window.addEventListener('resize', function () { if (zoom) place(zoom.wrap, zoomRect()); });
+  window.addEventListener('resize', function () {
+    if (zoom) place(zoom.wrap, zoom.flipped ? backRect() : frontRect(zoom.front));
+  });
 
   document.querySelector('.projects').addEventListener('click', function (e) {
     var card = e.target.closest('.project');
