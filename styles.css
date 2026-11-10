@@ -146,6 +146,12 @@ p { margin: 0 0 1em; }
 .project .name:hover, .project .name:focus-visible { color: var(--accent); }
 .project .name:hover::after, .project .name:focus-visible::after { opacity: 1; }
 
+/* skills: logo tile in front of the name */
+.chips li.has-ico { display: inline-flex; align-items: center; gap: 5px; padding-left: 5px; }
+.chip__ico { display: grid; place-items: center; flex: none; width: 22px; height: 22px; border-radius: 7px; background: #f3f5fb; box-shadow: 0 1px 2px rgba(0, 0, 0, .22); }
+.chip__ico img { display: block; width: 15px; height: 15px; pointer-events: none; user-select: none; -webkit-user-drag: none; }
+.chips li.has-ico .chip__ico:last-of-type { margin-right: 3px; }
+
 /* tech logos: every logo sits on a light tile so dark brand colours (Next.js, Express…) read in both themes */
 .chips li.logo, .project--glass .chips li.logo { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; background: #f3f5fb; border: 1px solid rgba(255, 255, 255, .5); box-shadow: 0 1px 2px rgba(0, 0, 0, .18); transition: transform .2s, box-shadow .2s; }
 .chips li.logo:hover { transform: translateY(-2px) scale(1.06); box-shadow: 0 6px 14px rgba(0, 0, 0, .25); }
@@ -154,25 +160,28 @@ p { margin: 0 0 1em; }
 .sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 
 /* frosted-glass card: blurred site screenshot behind a glass layer; content sits above both */
-.project--glass { --glass-a: 80%; --glass-b: 70%; --glass-dip: 6%; --glass-blur-hover: 1.5px; --glass-bright: 1; isolation: isolate; overflow: hidden; border-color: color-mix(in srgb, var(--accent) 38%, var(--line)); }
+.project--glass { --glass-a: 80%; --glass-b: 70%; --glass-dip: 6%; --glass-blur: 3px; --glass-blur-hover: 1.5px; --glass-bright: 1; --glass-tshadow: 0 1px 2px rgba(255, 255, 255, .9), 0 0 10px rgba(255, 255, 255, .85), 0 0 22px rgba(255, 255, 255, .6); isolation: isolate; overflow: hidden; border-color: color-mix(in srgb, var(--accent) 38%, var(--line)); }
 .project__bg { position: absolute; inset: -14px; z-index: -2; pointer-events: none; }
-.project__bg img { display: block; width: 100%; height: 100%; object-fit: cover; filter: blur(3px) saturate(1.3) brightness(var(--glass-bright)); transform: scale(1.05); transition: filter .7s, transform 1s cubic-bezier(.2, .7, .2, 1); user-select: none; -webkit-user-drag: none; }
+.project__bg img { display: block; width: 100%; height: 100%; object-fit: cover; filter: blur(var(--glass-blur)) saturate(1.3) brightness(var(--glass-bright)); transform: scale(1.05); transition: filter .7s, transform 1s cubic-bezier(.2, .7, .2, 1); user-select: none; -webkit-user-drag: none; }
 .project__glass { position: absolute; inset: 0; z-index: -1; pointer-events: none; backdrop-filter: blur(8px) saturate(1.5); -webkit-backdrop-filter: blur(8px) saturate(1.5); background: linear-gradient(155deg, color-mix(in srgb, var(--surface) var(--glass-a), transparent), color-mix(in srgb, var(--surface) var(--glass-b), transparent)); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .22), inset 0 0 0 1px rgba(255, 255, 255, .06); transition: background .6s; }
 /* hover: the site comes into focus, but the glass never gets thinner than 66% so text keeps its contrast */
 .project--glass:hover .project__bg img { filter: blur(var(--glass-blur-hover)) saturate(1.35) brightness(var(--glass-bright)); transform: scale(1.1); }
 .project--glass:hover .project__glass { background: linear-gradient(155deg, color-mix(in srgb, var(--surface) calc(var(--glass-a) - var(--glass-dip)), transparent), color-mix(in srgb, var(--surface) calc(var(--glass-b) - var(--glass-dip)), transparent)); }
 .project--glass .tag { color: var(--accent); }
+/* a soft halo in the glass tone around the lettering keeps it from melting into the photo */
+.project--glass header, .project--glass .bullets { text-shadow: var(--glass-tshadow); }
+.project--glass .chips li { text-shadow: none; }
 .project--glass .bullets, .project--glass header p { color: var(--text); opacity: .86; }
 .project--glass .chips li { background: color-mix(in srgb, var(--accent-soft) 86%, transparent); }
 /* the photo is dark, so a dark glass can be thinner and show more of the site */
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .project--glass { --glass-a: 72%; --glass-b: 60%; --glass-dip: 0%; --glass-blur-hover: 2px; --glass-bright: .7; } }
-:root[data-theme="dark"] .project--glass { --glass-a: 72%; --glass-b: 60%; --glass-dip: 0%; --glass-blur-hover: 2px; --glass-bright: .7; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .project--glass { --glass-a: 72%; --glass-b: 60%; --glass-dip: 0%; --glass-blur: 3px; --glass-blur-hover: 2px; --glass-bright: .7; --glass-tshadow: 0 1px 2px rgba(0, 0, 0, .75), 0 0 10px rgba(0, 0, 0, .7), 0 0 22px rgba(0, 0, 0, .5); } }
+:root[data-theme="dark"] .project--glass { --glass-a: 72%; --glass-b: 60%; --glass-dip: 0%; --glass-blur: 3px; --glass-blur-hover: 2px; --glass-bright: .7; --glass-tshadow: 0 1px 2px rgba(0, 0, 0, .75), 0 0 10px rgba(0, 0, 0, .7), 0 0 22px rgba(0, 0, 0, .5); }
 @media print { .project__bg, .project__glass { display: none; } }
 
 /* corner icon on every card: "click to enlarge" */
-.project__expand { position: absolute; top: 16px; right: 16px; z-index: 2; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--line); background: color-mix(in srgb, var(--surface-2) 82%, transparent); color: var(--muted); backdrop-filter: blur(4px); transition: color .2s, border-color .2s, transform .25s cubic-bezier(.2, .8, .2, 1), background .2s; pointer-events: none; }
-.project:hover .project__expand, .project:focus-visible .project__expand { color: var(--accent-ink); background: var(--accent); border-color: var(--accent); transform: scale(1.12) rotate(8deg); }
-.project header { padding-right: 46px; }
+.project__expand { position: absolute; top: 14px; right: 14px; z-index: 2; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--line); background: color-mix(in srgb, var(--surface-2) 82%, transparent); color: var(--muted); backdrop-filter: blur(4px); transition: color .2s, border-color .2s, transform .25s cubic-bezier(.2, .8, .2, 1), background .2s; pointer-events: none; }
+.project:hover .project__expand, .project:focus-visible .project__expand { color: var(--accent-ink); background: var(--accent); border-color: var(--accent); transform: scale(1.15) rotate(8deg); }
+.project header { padding-right: 36px; }
 .mock header { padding-right: 0; }
 .zoom__front header { padding-right: 40px; }
 

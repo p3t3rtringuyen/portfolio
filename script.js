@@ -280,6 +280,34 @@
     li.appendChild(el('span', 'sr', name));
   });
 
+  // ---- Skills: a logo tile in front of the name (the name stays visible).
+  var SKILL = {
+    'React 18/19': ['react'], 'Next.js (Pages & App Router)': ['nextdotjs'], 'TypeScript': ['typescript'],
+    'Remix': ['remix'], 'Vue / Nuxt': ['vuedotjs', 'nuxtdotjs'], 'Angular': ['angular'], 'HTML5 / CSS3': ['html5', 'css3'],
+    'MUI 5–7': ['mui'], 'Tailwind CSS': ['tailwindcss'], 'Headless UI': ['headlessui'], 'Storybook': ['storybook'],
+    'Figma → code': ['figma'], 'TanStack Query': ['reactquery'], 'Redux → hooks': ['redux'],
+    'React Hook Form': ['reacthookform'], 'Zod / Yup': ['zod'], 'Formik': ['formik'], 'TanStack Table': ['reacttable'],
+    'Charts (Recharts, Chart.js)': ['chartdotjs'], 'Keycloak / OIDC': ['keycloak', 'openid'],
+    'Go (Gin) APIs': ['go', 'gin'], 'NestJS': ['nestjs'], 'Node / Express': ['nodedotjs', 'express'],
+    'PostgreSQL': ['postgresql'], 'Redis': ['redis'], 'Kafka': ['apachekafka'], 'AWS': ['amazonwebservices'],
+    'Strapi CMS': ['strapi'], 'ESLint / Prettier': ['eslint', 'prettier'], 'Conventional Commits': ['conventionalcommits'],
+    'GitLab CI': ['gitlab'], 'Docker': ['docker'], 'Asana · Trello · GitLab': ['asana', 'trello', 'gitlab']
+  };
+  document.querySelectorAll('#skills .chips li').forEach(function (li) {
+    var slugs = SKILL[li.textContent.trim()];
+    if (!slugs) return;
+    li.classList.add('has-ico');
+    slugs.slice().reverse().forEach(function (s) {
+      var tile = el('span', 'chip__ico');
+      var img = document.createElement('img');
+      img.src = 'img/tech/' + s + '.svg';
+      img.alt = ''; img.width = 15; img.height = 15;
+      img.loading = 'lazy'; img.decoding = 'async'; img.draggable = false;
+      tile.appendChild(img);
+      li.insertBefore(tile, li.firstChild);
+    });
+  });
+
   // The project's name is a button that opens the mini-browser window.
   projects.forEach(function (card) {
     var h3 = card.querySelector('h3');
@@ -292,7 +320,7 @@
     var hint = el('span', 'project__expand');
     hint.setAttribute('aria-hidden', 'true');
     hint.title = 'Click the card to enlarge it';
-    hint.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7.5 7.5M3 21l7.5-7.5"/></svg>';
+    hint.innerHTML = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7.5 7.5M3 21l7.5-7.5"/></svg>';
     card.appendChild(hint);
   });
 
