@@ -191,10 +191,10 @@ button { font-family: inherit; }
 .project__bg img { display: block; width: 100%; height: 100%; object-fit: cover; filter: blur(var(--glass-blur)) saturate(1.3) brightness(var(--glass-bright)); transform: scale(1.05); transition: filter .8s ease, transform 1s cubic-bezier(.2, .7, .2, 1); user-select: none; -webkit-user-drag: none; }
 .project__glass { position: absolute; inset: 0; z-index: -1; pointer-events: none; backdrop-filter: blur(8px) saturate(1.5); -webkit-backdrop-filter: blur(8px) saturate(1.5); --ga: var(--glass-a); --gb: var(--glass-b); background: linear-gradient(155deg, color-mix(in srgb, var(--surface) var(--ga), transparent), color-mix(in srgb, var(--surface) var(--gb), transparent)); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .22), inset 0 0 0 1px rgba(255, 255, 255, .06); transition: --ga .8s ease, --gb .8s ease, backdrop-filter .8s ease, -webkit-backdrop-filter .8s ease; }
 /* hover: the site comes into focus, but the glass never gets thinner than 66% so text keeps its contrast */
-/* Hover: the photo comes fully into focus. The glass thins to nothing, the blur drops to zero and, a moment later, the
+/* Hover: the photo comes fully into focus and shrinks (--fit, set by script) until the whole page fits inside the card. The glass thins to nothing, the blur drops to zero and, a moment later, the
    lettering fades out so the picture is all that is left; the time lets the visitor read the card first. Mouse-out
    brings the glass and the text back. Not on touch screens, where there is no hover. */
-.project--glass:hover .project__bg img { filter: blur(0px) saturate(1.2) brightness(1); transform: scale(1.1); transition: filter var(--reveal-dur) ease, transform calc(var(--reveal-dur) * 1.2) cubic-bezier(.2, .7, .2, 1); }
+.project--glass:hover .project__bg img { filter: blur(0px) saturate(1.2) brightness(1); transform: scale(var(--fit, 1.1)); transition: filter var(--reveal-dur) ease, transform calc(var(--reveal-dur) * 1.2) cubic-bezier(.2, .7, .2, 1); }
 .project--glass:hover .project__glass { --ga: 0%; --gb: 0%; backdrop-filter: blur(0px) saturate(1); -webkit-backdrop-filter: blur(0px) saturate(1); transition: --ga var(--reveal-dur) ease, --gb var(--reveal-dur) ease, backdrop-filter var(--reveal-dur) ease, -webkit-backdrop-filter var(--reveal-dur) ease; }
 @media (hover: hover) {
   .project--glass > :not(.project__bg):not(.project__glass):not(.project__expand) { transition: opacity .6s ease; }
