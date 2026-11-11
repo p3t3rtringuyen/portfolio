@@ -347,6 +347,13 @@ body.lb-open { overflow: hidden; }
 .contact .cta { justify-content: center; }
 .foot { display: flex; justify-content: space-between; padding: 40px 0; color: var(--muted); font-size: 14px; }
 
+/* phones: the two hero buttons share one row; type and padding scale with the width so the row never wraps or overflows */
+@media (max-width: 560px) {
+  .hero .cta { flex-wrap: nowrap; gap: 8px; }
+  .hero .cta .btn { flex: 0 0 auto; min-width: 0; padding: 12px clamp(10px, 3.2vw, 16px); font-size: clamp(12px, 3.6vw, 15px); white-space: nowrap; }
+  .hero .cta .copy { flex: 1 1 auto; }
+}
+
 /* reveal on scroll */
 .js .reveal { opacity: 0; transform: translateY(48px) scale(.97); transition: opacity .8s cubic-bezier(.2, .7, .2, 1), transform .8s cubic-bezier(.2, .7, .2, 1); transition-delay: var(--d, 0s); will-change: opacity, transform; }
 .js .reveal.in { opacity: 1; transform: none; }
