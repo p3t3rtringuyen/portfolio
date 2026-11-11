@@ -153,15 +153,6 @@
     hint.title = 'Click the card to enlarge it';
     hint.innerHTML = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7.5 7.5M3 21l7.5-7.5"/></svg>';
     card.appendChild(hint);
-    // On hover the URL slides in from the left, just above the logos (a second copy of the link; the one under the title fades).
-    var sub = card.querySelector('h3 small a');
-    if (sub && card.classList.contains('project--glass') && !card.querySelector('.links')) {
-      var dock = el('a', 'project__dock', sub.textContent);
-      dock.href = sub.href; dock.target = '_blank'; dock.rel = 'noopener';
-      dock.tabIndex = -1; dock.setAttribute('aria-hidden', 'true');
-      card.classList.add('has-dock');
-      card.appendChild(dock);
-    }
   });
 
   // ---- Zoom + flip: the rest of the card zooms to the centre; a second click
@@ -421,9 +412,9 @@
     card.style.setProperty('--fit', (fitted / cover).toFixed(4));
     card.style.setProperty('--img-w', (img.naturalWidth * cover).toFixed(1) + 'px');
     card.style.setProperty('--img-h', (img.naturalHeight * cover).toFixed(1) + 'px');
-    // The docked copy of the URL (see below) rests just above the technology logos.
-    var dock = card.querySelector('.project__dock'), chips = card.querySelector('.chips');
-    if (dock && chips) card.style.setProperty('--dock-top', Math.max(0, chips.offsetTop - dock.offsetHeight - 8) + 'px');
+    // On hover the URL under the title slides sideways to the right end of the title row.
+    var title = card.querySelector('h3'), url = title && title.querySelector('small');
+    if (url) card.style.setProperty('--url-dx', Math.max(0, title.clientWidth - url.offsetWidth) + 'px');
   }
   document.querySelectorAll('.project--glass').forEach(function (card) {
     var img = card.querySelector('.project__bg img');
