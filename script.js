@@ -432,6 +432,7 @@
   });
 
   // ---- Experience timeline: the line grows with the scroll, and a milestone appears when the line reaches its dot.
+  // The line's tip follows the bottom of the screen (60px in), so every milestone that is on screen is already shown.
   var timeline = document.querySelector('.timeline');
   if (timeline) {
     var steps = Array.prototype.slice.call(timeline.querySelectorAll('li'));
@@ -440,7 +441,7 @@
     var updateTimeline = function () {
       pending = false;
       var rect = timeline.getBoundingClientRect();
-      var progress = still ? rect.height : Math.max(0, Math.min(rect.height, window.innerHeight * 0.62 - rect.top));
+      var progress = still ? rect.height : Math.max(0, Math.min(rect.height, window.innerHeight - 60 - rect.top));
       timeline.style.setProperty('--tl-progress', progress.toFixed(1) + 'px');
       steps.forEach(function (li) { li.classList.toggle('is-on', progress >= li.offsetTop + 13); }); // 13px = centre of the dot
     };
