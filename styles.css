@@ -46,6 +46,12 @@ p { margin: 0 0 1em; }
 /* buttons */
 .btn { display: inline-flex; align-items: center; justify-content: center; padding: 12px 22px; border-radius: 12px; background: var(--accent); color: var(--accent-ink); font-weight: 600; border: 1px solid var(--accent); cursor: pointer; transition: transform .15s, box-shadow .15s; }
 .btn:hover { text-decoration: none; transform: translateY(-1px); box-shadow: 0 8px 24px var(--glow); }
+/* A <button> does not inherit the page font by default, so the two hero buttons used different typefaces. */
+button { font-family: inherit; }
+/* The label's box is trimmed to the letters' cap height, so the text sits in the exact middle of the button instead of a font-dependent line box. */
+.btn { min-height: 48px; }
+.btn--sm { min-height: 38px; }
+.btn__txt { display: block; line-height: 1; text-box: trim-both cap alphabetic; }
 .btn--ghost { background: transparent; color: var(--text); border-color: var(--line); }
 .btn--ghost:hover { border-color: var(--accent); box-shadow: none; }
 .btn--sm { padding: 8px 16px; font-size: 14px; }
@@ -371,7 +377,8 @@ body.lb-open { overflow: hidden; }
   .nav__menu a:not(.btn) { padding: 12px 0; }
   .nav__menu .theme { margin-top: 8px; }
   .grid--3 { grid-template-columns: 1fr; }
-  .hero { padding-top: 56px; }
+  .hero { padding-top: 56px; padding-bottom: 16px; }
+  .section { padding-top: 40px; } /* tighter gaps between sections on phones: 128px -> 56px after the hero, 80px -> 48px elsewhere */
   .br-d { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
