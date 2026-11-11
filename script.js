@@ -43,7 +43,7 @@
   // Each block fades and rises into place as it scrolls in from the bottom;
   // siblings in the same row are staggered. The classes are removed afterwards
   // so hover styles are not held back by the reveal transition.
-  var targets = document.querySelectorAll('.section__title, .section__intro, .filters, .stats li, .project, .card, .timeline li, .chips--values, .tile');
+  var targets = document.querySelectorAll('.section__title, .section__intro, .filters, .stats li, .project, .card, .chips--values, .tile');
   targets.forEach(function (el) {
     var idx = Array.prototype.indexOf.call(el.parentNode.children, el);
     el.style.setProperty('--d', (idx % 3) * 0.1 + 's');
@@ -64,38 +64,6 @@
     targets.forEach(function (el) { el.classList.remove('reveal'); });
   }
 
-  // ---- Floating mini-browser windows -------------------------------------
-  // A project with data-url is shown as the live site in an iframe. One without
-  // (the site forbids framing, or it is an internal tool with no public URL)
-  // shows its case study inside the same window frame instead.
-  var layer = document.createElement('div');
-  layer.className = 'win-layer';
-  document.body.appendChild(layer);
-  var closeAll = document.createElement('button');
-  closeAll.className = 'win-closeall';
-  closeAll.type = 'button';
-  closeAll.textContent = 'Close all windows';
-  document.body.appendChild(closeAll);
-
-  var wins = [];
-  var zTop = 1;
-  var phone = window.matchMedia('(max-width: 720px)');
-
-  function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
-  function sync() { closeAll.classList.toggle('show', wins.length > 1); }
-
-  function focusWin(w) {
-    wins.forEach(function (o) { o.el.classList.toggle('is-active', o === w); });
-    w.el.style.zIndex = ++zTop;
-  }
-
-  function closeWin(w) {
-    w.el.remove();
-    wins = wins.filter(function (o) { return o !== w; });
-    if (wins.length) focusWin(wins[wins.length - 1]);
-    sync();
-  }
-
   function el(tag, cls, text) {
     var n = document.createElement(tag);
     if (cls) n.className = cls;
@@ -103,141 +71,9 @@
     return n;
   }
 
-  function buildPage(card, external) {
-    var page = el('div', 'mock');
-    var head = card.querySelector('header').cloneNode(true);
-    page.appendChild(head);
-    ['.bullets', '.chips'].forEach(function (sel) {
-      var part = card.querySelector(sel);
-      if (part) page.appendChild(part.cloneNode(true));
-    });
-    var why = el('p', 'mock__why', external
-      ? 'The live site does not allow being shown inside another page, so this window shows the case study instead.'
-      : 'This window shows the case study for the project.');
-    page.insertBefore(why, page.children[1] || null);
-    if (external) {
-      var a = el('a', 'btn', 'Visit ' + external.replace(/^https?:\/\/(www\.)?/, '') + ' ↗');
-      a.href = external; a.target = '_blank'; a.rel = 'noopener';
-      page.appendChild(a);
-      page.appendChild(el('p', 'mock__why', 'The public site may have changed since the project launched.'));
-    }
-    return page;
-  }
-
-  function openWin(opts) {
-    // opts: { key, title, url?, card?, external? }
-    var found = wins.filter(function (o) { return o.key === opts.key; })[0];
-    if (found) { focusWin(found); return; }
-
-    var n = wins.length;
-    var vw = window.innerWidth, vh = window.innerHeight;
-    var w = Math.min(920, vw - 40), h = Math.min(640, vh - 110);
-    var el0 = el('div', 'win');
-    el0.setAttribute('role', 'dialog');
-    el0.setAttribute('aria-label', opts.title);
-    el0.tabIndex = -1;
-    el0.style.width = w + 'px';
-    el0.style.height = h + 'px';
-    el0.style.left = clamp(70 + (n % 7) * 30, 0, Math.max(0, vw - w)) + 'px';
-    el0.style.top = clamp(84 + (n % 7) * 30, 0, Math.max(0, vh - h)) + 'px';
-
-    var bar = el('div', 'win__bar');
-    var lights = el('div', 'win__lights');
-    var bClose = el('button', 'win__light win__light--close'); bClose.type = 'button'; bClose.setAttribute('aria-label', 'Close window');
-    var bMax = el('button', 'win__light win__light--max'); bMax.type = 'button'; bMax.setAttribute('aria-label', 'Maximise window');
-    lights.appendChild(bClose); lights.appendChild(bMax);
-    var url = el('div', 'win__url', opts.url ? opts.url.replace(/^https?:\/\//, '') : 'case-study / ' + opts.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''));
-    bar.appendChild(lights); bar.appendChild(url);
-    var target = opts.url || opts.external;
-    if (target) {
-      var ext = el('a', 'win__ext', '↗');
-      ext.href = target; ext.target = '_blank'; ext.rel = 'noopener';
-      ext.setAttribute('aria-label', 'Open in a new tab'); ext.title = 'Open in a new tab';
-      bar.appendChild(ext);
-    }
-
-    var body = el('div', 'win__body');
-    if (opts.url) {
-      var f = document.createElement('iframe');
-      f.src = opts.url;
-      f.title = opts.title;
-      f.loading = 'lazy';
-      f.referrerPolicy = 'no-referrer';
-      f.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox');
-      body.appendChild(f);
-    } else {
-      body.appendChild(buildPage(opts.card, opts.external));
-    }
-
-    var grip = el('div', 'win__grip');
-    el0.appendChild(bar); el0.appendChild(body);
-    if (opts.url) el0.appendChild(el('div', 'win__note', 'Live site. If it looks blank, use ↗ to open it in a new tab.'));
-    el0.appendChild(grip);
-    layer.appendChild(el0);
-
-    var win = { key: opts.key, el: el0 };
-    wins.push(win);
-    focusWin(win);
-    sync();
-
-    el0.addEventListener('pointerdown', function () { if (!el0.classList.contains('is-active')) focusWin(win); }, true);
-    bClose.addEventListener('click', function () { closeWin(win); });
-    bMax.addEventListener('click', function () { el0.classList.toggle('is-max'); });
-    bar.addEventListener('dblclick', function (e) { if (!e.target.closest('button, a')) el0.classList.toggle('is-max'); });
-
-    // Drag by the title bar
-    bar.addEventListener('pointerdown', function (e) {
-      if (e.target.closest('button, a') || phone.matches || el0.classList.contains('is-max')) return;
-      var ox = e.clientX - el0.offsetLeft, oy = e.clientY - el0.offsetTop;
-      bar.setPointerCapture(e.pointerId);
-      document.body.classList.add('is-dragging');
-      function move(ev) {
-        el0.style.left = clamp(ev.clientX - ox, 120 - el0.offsetWidth, window.innerWidth - 120) + 'px';
-        el0.style.top = clamp(ev.clientY - oy, 0, window.innerHeight - 40) + 'px';
-      }
-      function up() {
-        bar.removeEventListener('pointermove', move);
-        bar.removeEventListener('pointerup', up);
-        bar.removeEventListener('pointercancel', up);
-        document.body.classList.remove('is-dragging');
-      }
-      bar.addEventListener('pointermove', move);
-      bar.addEventListener('pointerup', up);
-      bar.addEventListener('pointercancel', up);
-    });
-
-    // Resize from the bottom-right corner
-    grip.addEventListener('pointerdown', function (e) {
-      e.preventDefault();
-      var sx = e.clientX, sy = e.clientY, sw = el0.offsetWidth, sh = el0.offsetHeight;
-      grip.setPointerCapture(e.pointerId);
-      document.body.classList.add('is-dragging');
-      function move(ev) {
-        el0.style.width = Math.max(300, sw + ev.clientX - sx) + 'px';
-        el0.style.height = Math.max(220, sh + ev.clientY - sy) + 'px';
-      }
-      function up() {
-        grip.removeEventListener('pointermove', move);
-        grip.removeEventListener('pointerup', up);
-        grip.removeEventListener('pointercancel', up);
-        document.body.classList.remove('is-dragging');
-      }
-      grip.addEventListener('pointermove', move);
-      grip.addEventListener('pointerup', up);
-      grip.addEventListener('pointercancel', up);
-    });
-
-    el0.focus({ preventScroll: true });
-  }
-
-  closeAll.addEventListener('click', function () { wins.slice().forEach(closeWin); });
   document.addEventListener('keydown', function (e) {
     if (document.body.classList.contains('lb-open')) return; // the photo viewer handles its own keys
-    if (e.key === 'Escape' && zoom) { closeZoom(); return; }
-    if (e.key === 'Escape' && wins.length) {
-      var top = wins.filter(function (o) { return o.el.classList.contains('is-active'); })[0];
-      if (top) closeWin(top);
-    }
+    if (e.key === 'Escape' && zoom) closeZoom();
   });
 
   function titleOf(card) { return card.querySelector('h3').firstChild.textContent.trim(); }
@@ -317,6 +153,15 @@
     hint.title = 'Click the card to enlarge it';
     hint.innerHTML = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7.5 7.5M3 21l7.5-7.5"/></svg>';
     card.appendChild(hint);
+    // On hover the URL slides in from the left, just above the logos (a second copy of the link; the one under the title fades).
+    var sub = card.querySelector('h3 small a');
+    if (sub && card.classList.contains('project--glass') && !card.querySelector('.links')) {
+      var dock = el('a', 'project__dock', sub.textContent);
+      dock.href = sub.href; dock.target = '_blank'; dock.rel = 'noopener';
+      dock.tabIndex = -1; dock.setAttribute('aria-hidden', 'true');
+      card.classList.add('has-dock');
+      card.appendChild(dock);
+    }
   });
 
   // ---- Zoom + flip: the rest of the card zooms to the centre; a second click
@@ -363,7 +208,7 @@
 
   function openZoom(card) {
     if (zoom) return;
-    var url = card.dataset.url, external = card.dataset.external;
+    var url = card.dataset.url;
     var canFlip = !!url; // only a site that allows being embedded has a back to turn to
     var root = el('div', 'zoom');
     var backdrop = el('div', 'zoom__backdrop');
@@ -405,13 +250,12 @@
     var bar = el('div', 'win__bar zoom__bar');
     var bFlip = el('button', 'win__ext', '↺');
     bFlip.type = 'button'; bFlip.title = 'Flip back'; bFlip.setAttribute('aria-label', 'Flip back');
-    var urlText = url ? url.replace(/^https?:\/\//, '') : (external ? external.replace(/^https?:\/\//, '') : 'case-study');
+    var urlText = url ? url.replace(/^https?:\/\//, '') : '';
     var urlBox = el('div', 'win__url', urlText);
     bar.appendChild(bFlip); bar.appendChild(urlBox);
-    var target = url || external;
-    if (target) {
+    if (url) {
       var ext = el('a', 'win__ext', '↗');
-      ext.href = target; ext.target = '_blank'; ext.rel = 'noopener';
+      ext.href = url; ext.target = '_blank'; ext.rel = 'noopener';
       ext.title = 'Open in a new tab'; ext.setAttribute('aria-label', 'Open in a new tab');
       bar.appendChild(ext);
     }
@@ -426,8 +270,6 @@
       frame.referrerPolicy = 'no-referrer';
       frame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox');
       content.appendChild(frame);
-    } else {
-      content.appendChild(buildPage(card, external));
     }
     back.appendChild(bar); back.appendChild(content);
 
@@ -468,13 +310,6 @@
 
   document.querySelector('.projects').addEventListener('click', function (e) {
     var card = e.target.closest('.project');
-    var link = e.target.closest('a[data-open-url]');
-    if (link) {
-      if (e.ctrlKey || e.metaKey || e.shiftKey || e.button) return; // let "open in new tab" work normally
-      e.preventDefault();
-      openWin({ key: link.href, title: link.textContent.replace(/\s*↗$/, ''), url: link.href, card: card });
-      return;
-    }
     if (e.target.closest('a')) return;
     if (String(window.getSelection())) return; // the user is selecting text
     openZoom(card);
@@ -586,12 +421,9 @@
     card.style.setProperty('--fit', (fitted / cover).toFixed(4));
     card.style.setProperty('--img-w', (img.naturalWidth * cover).toFixed(1) + 'px');
     card.style.setProperty('--img-h', (img.naturalHeight * cover).toFixed(1) + 'px');
-    // On hover the URL under the title travels down to the left edge, just above the technology logos.
-    // (A card with its own row of links, already placed above the logos, keeps the URL where it is.)
-    var url = card.querySelector('h3 small'), chips = card.querySelector('.chips');
-    if (url && chips && !card.querySelector('.links')) {
-      card.style.setProperty('--url-dy', Math.max(0, chips.offsetTop - (url.offsetTop + url.offsetHeight) - 8) + 'px');
-    }
+    // The docked copy of the URL (see below) rests just above the technology logos.
+    var dock = card.querySelector('.project__dock'), chips = card.querySelector('.chips');
+    if (dock && chips) card.style.setProperty('--dock-top', Math.max(0, chips.offsetTop - dock.offsetHeight - 8) + 'px');
   }
   document.querySelectorAll('.project--glass').forEach(function (card) {
     var img = card.querySelector('.project__bg img');
@@ -607,6 +439,25 @@
       n.addEventListener(t, function (e) { e.preventDefault(); });
     });
   });
+
+  // ---- Experience timeline: the line grows with the scroll, and a milestone appears when the line reaches its dot.
+  var timeline = document.querySelector('.timeline');
+  if (timeline) {
+    var steps = Array.prototype.slice.call(timeline.querySelectorAll('li'));
+    var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches; // no animation: show everything
+    var pending = false;
+    var updateTimeline = function () {
+      pending = false;
+      var rect = timeline.getBoundingClientRect();
+      var progress = still ? rect.height : Math.max(0, Math.min(rect.height, window.innerHeight * 0.62 - rect.top));
+      timeline.style.setProperty('--tl-progress', progress.toFixed(1) + 'px');
+      steps.forEach(function (li) { li.classList.toggle('is-on', progress >= li.offsetTop + 13); }); // 13px = centre of the dot
+    };
+    var queueTimeline = function () { if (!pending) { pending = true; requestAnimationFrame(updateTimeline); } };
+    window.addEventListener('scroll', queueTimeline, { passive: true });
+    window.addEventListener('resize', queueTimeline);
+    updateTimeline();
+  }
 
   // ---- Copy the e-mail address: tooltip says "Click to copy", then "Copied".
   document.querySelectorAll('[data-copy]').forEach(function (b) {
