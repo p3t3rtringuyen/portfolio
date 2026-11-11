@@ -573,16 +573,16 @@
     if (Math.abs(dx) > 50) lbShow(lbIndex + (dx < 0 ? 1 : -1), true);
   });
 
-  // ---- Card backdrops: on hover the screenshot shrinks until the whole page fits inside the card.
-  // CSS shows it cropped (object-fit: cover, inset by a 14px bleed); --fit is the scale that turns that
-  // into "contain" for this card's size and this picture's proportions.
+  // ---- Card backdrops: on hover the screenshot shrinks until it spans the card's full width.
+  // CSS shows it cropped (object-fit: cover, inset by a 14px bleed); --fit is the scale that brings its
+  // width down to exactly the card's width, for this card's size and this picture's proportions.
   function fitBackdrop(card) {
     var img = card.querySelector('.project__bg img');
     if (!img || !img.naturalWidth) return;
     var cw = card.clientWidth, ch = card.clientHeight, bleed = 14;
     var cover = Math.max((cw + 2 * bleed) / img.naturalWidth, (ch + 2 * bleed) / img.naturalHeight);
-    var contain = Math.min(cw / img.naturalWidth, ch / img.naturalHeight);
-    card.style.setProperty('--fit', (contain / cover).toFixed(4));
+    var fitWidth = cw / img.naturalWidth; // the picture always spans the card's full width
+    card.style.setProperty('--fit', (fitWidth / cover).toFixed(4));
   }
   document.querySelectorAll('.project--glass').forEach(function (card) {
     var img = card.querySelector('.project__bg img');
