@@ -343,6 +343,12 @@
   function place(node, r) {
     node.style.left = r.left + 'px'; node.style.top = r.top + 'px';
     node.style.width = r.width + 'px'; node.style.height = r.height + 'px';
+    if (node.classList.contains('zoom__card')) {
+      // While the card is growing, shrinking or turning, its content is briefly bigger than its box: hide the scrollbars until it settles.
+      node.classList.add('is-moving');
+      clearTimeout(node._moving);
+      node._moving = setTimeout(function () { node.classList.remove('is-moving'); }, 950);
+    }
   }
 
   function closeZoom() {
@@ -358,6 +364,7 @@
   function openZoom(card) {
     if (zoom) return;
     var url = card.dataset.url, external = card.dataset.external;
+    var canFlip = !!url; // only a site that allows being embedded has a back to turn to
     var root = el('div', 'zoom');
     var backdrop = el('div', 'zoom__backdrop');
     var wrap = el('div', 'zoom__card');
@@ -366,18 +373,29 @@
     // Front: a copy of the card
     var front = el('div', 'zoom__face zoom__front project');
     front.tabIndex = 0;
-    front.setAttribute('role', 'button');
-    front.setAttribute('aria-label', 'Flip the card to see the website of ' + titleOf(card));
+    if (canFlip) {
+      front.classList.add('is-flippable');
+      front.setAttribute('role', 'button');
+      front.setAttribute('aria-label', 'Flip the card to see the website of ' + titleOf(card));
+    } else {
+      front.setAttribute('role', 'dialog');
+      front.setAttribute('aria-label', titleOf(card));
+    }
     var head = card.querySelector('header').cloneNode(true);
     front.appendChild(head);
     ['.bullets', '.chips'].forEach(function (sel) {
       var part = card.querySelector(sel);
       if (part) front.appendChild(part.cloneNode(true));
     });
-    var badge = el('span', 'zoom__badge', 'Flip ');
-    badge.setAttribute('aria-hidden', 'true');
-    badge.appendChild(el('i', '', '↻'));
-    front.appendChild(badge);
+    // The Flip button is the last chip of the row of technology chips, so it lines up with them (and sits at the right end).
+    if (canFlip) {
+      var badge = el('li', 'zoom__badge', 'Flip ');
+      badge.setAttribute('aria-hidden', 'true');
+      badge.appendChild(el('i', '', '↻'));
+      var chipRow = front.querySelector('.chips');
+      if (!chipRow) { chipRow = el('ul', 'chips chips--sm'); front.appendChild(chipRow); }
+      chipRow.appendChild(badge);
+    }
     var x1 = el('button', 'zoom__x', '✕');
     x1.type = 'button'; x1.setAttribute('aria-label', 'Close');
     front.appendChild(x1);
@@ -413,7 +431,8 @@
     }
     back.appendChild(bar); back.appendChild(content);
 
-    flip.appendChild(front); flip.appendChild(back);
+    flip.appendChild(front);
+    if (canFlip) flip.appendChild(back);
     wrap.appendChild(flip);
     root.appendChild(backdrop); root.appendChild(wrap);
 
@@ -435,8 +454,8 @@
       if (on && frame && !frame.src) frame.src = url;
       (on ? bFlip : front).focus({ preventScroll: true });
     }
-    front.addEventListener('click', function (e) { if (!e.target.closest('.zoom__x, a')) turn(true); });
-    front.addEventListener('keydown', function (e) { if ((e.key === 'Enter' || e.key === ' ') && e.target === front) { e.preventDefault(); turn(true); } });
+    front.addEventListener('click', function (e) { if (canFlip && !e.target.closest('.zoom__x, a')) turn(true); });
+    front.addEventListener('keydown', function (e) { if (canFlip && (e.key === 'Enter' || e.key === ' ') && e.target === front) { e.preventDefault(); turn(true); } });
     bFlip.addEventListener('click', function () { turn(false); });
     x1.addEventListener('click', closeZoom);
     x2.addEventListener('click', closeZoom);
