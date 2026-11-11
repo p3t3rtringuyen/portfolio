@@ -584,6 +584,14 @@
     // Span the card's width; if that would make the picture taller than the card (a portrait screenshot), fit its height instead.
     var fitted = Math.min(cw / img.naturalWidth, ch / img.naturalHeight);
     card.style.setProperty('--fit', (fitted / cover).toFixed(4));
+    card.style.setProperty('--img-w', (img.naturalWidth * cover).toFixed(1) + 'px');
+    card.style.setProperty('--img-h', (img.naturalHeight * cover).toFixed(1) + 'px');
+    // On hover the URL under the title travels down to the left edge, just above the technology logos.
+    // (A card with its own row of links, already placed above the logos, keeps the URL where it is.)
+    var url = card.querySelector('h3 small'), chips = card.querySelector('.chips');
+    if (url && chips && !card.querySelector('.links')) {
+      card.style.setProperty('--url-dy', Math.max(0, chips.offsetTop - (url.offsetTop + url.offsetHeight) - 8) + 'px');
+    }
   }
   document.querySelectorAll('.project--glass').forEach(function (card) {
     var img = card.querySelector('.project__bg img');
