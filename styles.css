@@ -175,30 +175,35 @@ p { margin: 0 0 1em; }
 .sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 
 /* frosted-glass card: blurred site screenshot behind a glass layer; content sits above both */
-.project--glass { --glass-a: 80%; --glass-b: 70%; --glass-dip: 6%; --glass-blur: 3px; --glass-blur-hover: 1.5px; --glass-bright: 1; --glass-tshadow: 0 1px 2px rgba(255, 255, 255, .9), 0 0 10px rgba(255, 255, 255, .85), 0 0 22px rgba(255, 255, 255, .6); isolation: isolate; overflow: hidden; border-color: color-mix(in srgb, var(--accent) 38%, var(--line)); }
+@property --ga { syntax: '<percentage>'; inherits: false; initial-value: 80%; }
+@property --gb { syntax: '<percentage>'; inherits: false; initial-value: 70%; }
+.project--glass { --glass-a: 80%; --glass-b: 70%; --glass-reveal: 22%; --glass-blur: 3px; --glass-blur-hover: 1px; --glass-bright: 1; --glass-bright-hover: 1; --reveal-dur: 1.8s; --glass-tshadow-hover: 0 1px 2px rgba(255, 255, 255, 1), 0 0 8px rgba(255, 255, 255, 1), 0 0 20px rgba(255, 255, 255, .85); --glass-tshadow: 0 1px 2px rgba(255, 255, 255, .9), 0 0 10px rgba(255, 255, 255, .85), 0 0 22px rgba(255, 255, 255, .6); isolation: isolate; overflow: hidden; border-color: color-mix(in srgb, var(--accent) 38%, var(--line)); }
 .project__bg { position: absolute; inset: -14px; z-index: -2; pointer-events: none; }
-.project__bg img { display: block; width: 100%; height: 100%; object-fit: cover; filter: blur(var(--glass-blur)) saturate(1.3) brightness(var(--glass-bright)); transform: scale(1.05); transition: filter .7s, transform 1s cubic-bezier(.2, .7, .2, 1); user-select: none; -webkit-user-drag: none; }
-.project__glass { position: absolute; inset: 0; z-index: -1; pointer-events: none; backdrop-filter: blur(8px) saturate(1.5); -webkit-backdrop-filter: blur(8px) saturate(1.5); background: linear-gradient(155deg, color-mix(in srgb, var(--surface) var(--glass-a), transparent), color-mix(in srgb, var(--surface) var(--glass-b), transparent)); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .22), inset 0 0 0 1px rgba(255, 255, 255, .06); transition: background .6s; }
+.project__bg img { display: block; width: 100%; height: 100%; object-fit: cover; filter: blur(var(--glass-blur)) saturate(1.3) brightness(var(--glass-bright)); transform: scale(1.05); transition: filter .8s ease, transform 1s cubic-bezier(.2, .7, .2, 1); user-select: none; -webkit-user-drag: none; }
+.project__glass { position: absolute; inset: 0; z-index: -1; pointer-events: none; backdrop-filter: blur(8px) saturate(1.5); -webkit-backdrop-filter: blur(8px) saturate(1.5); --ga: var(--glass-a); --gb: var(--glass-b); background: linear-gradient(155deg, color-mix(in srgb, var(--surface) var(--ga), transparent), color-mix(in srgb, var(--surface) var(--gb), transparent)); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .22), inset 0 0 0 1px rgba(255, 255, 255, .06); transition: --ga .8s ease, --gb .8s ease; }
 /* hover: the site comes into focus, but the glass never gets thinner than 66% so text keeps its contrast */
-.project--glass:hover .project__bg img { filter: blur(var(--glass-blur-hover)) saturate(1.35) brightness(var(--glass-bright)); transform: scale(1.1); }
-.project--glass:hover .project__glass { background: linear-gradient(155deg, color-mix(in srgb, var(--surface) calc(var(--glass-a) - var(--glass-dip)), transparent), color-mix(in srgb, var(--surface) calc(var(--glass-b) - var(--glass-dip)), transparent)); }
+/* Hover: the photo comes into focus slowly (the glass thins, the blur drops, the photo brightens and drifts closer)
+   so there is time to read while it clears; on mouse-out it returns to the resting look. The text halo grows to compensate. */
+.project--glass:hover .project__bg img { filter: blur(var(--glass-blur-hover)) saturate(1.35) brightness(var(--glass-bright-hover)); transform: scale(1.1); transition: filter var(--reveal-dur) ease, transform calc(var(--reveal-dur) * 1.2) cubic-bezier(.2, .7, .2, 1); }
+.project--glass:hover .project__glass { --ga: max(16%, calc(var(--glass-a) - var(--glass-reveal))); --gb: max(12%, calc(var(--glass-b) - var(--glass-reveal))); transition: --ga var(--reveal-dur) ease, --gb var(--reveal-dur) ease; }
+.project--glass:hover header, .project--glass:hover .bullets { text-shadow: var(--glass-tshadow-hover); transition: text-shadow var(--reveal-dur) ease; }
 .project--glass .tag { color: var(--accent); }
 /* a soft halo in the glass tone around the lettering keeps it from melting into the photo */
-.project--glass header, .project--glass .bullets { text-shadow: var(--glass-tshadow); }
+.project--glass header, .project--glass .bullets { text-shadow: var(--glass-tshadow); transition: text-shadow .8s ease; }
 .project--glass .chips li { text-shadow: none; }
 .project--glass .bullets, .project--glass header p { color: var(--text); opacity: .86; }
 .project--glass .chips li { background: color-mix(in srgb, var(--accent-soft) 86%, transparent); }
 /* the photo is dark, so a dark glass can be thinner and show more of the site */
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .project--glass { --glass-a: 72%; --glass-b: 60%; --glass-dip: 0%; --glass-blur: 3px; --glass-blur-hover: 2px; --glass-bright: .7; --glass-tshadow: 0 1px 2px rgba(0, 0, 0, .75), 0 0 10px rgba(0, 0, 0, .7), 0 0 22px rgba(0, 0, 0, .5); } }
-:root[data-theme="dark"] .project--glass { --glass-a: 72%; --glass-b: 60%; --glass-dip: 0%; --glass-blur: 3px; --glass-blur-hover: 2px; --glass-bright: .7; --glass-tshadow: 0 1px 2px rgba(0, 0, 0, .75), 0 0 10px rgba(0, 0, 0, .7), 0 0 22px rgba(0, 0, 0, .5); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .project--glass { --glass-a: 72%; --glass-b: 60%; --glass-reveal: 18%; --glass-blur: 3px; --glass-blur-hover: 1px; --glass-bright: .7; --glass-bright-hover: .8; --glass-tshadow-hover: 0 1px 2px rgba(0, 0, 0, .95), 0 0 8px rgba(0, 0, 0, .9), 0 0 20px rgba(0, 0, 0, .75); --glass-tshadow: 0 1px 2px rgba(0, 0, 0, .75), 0 0 10px rgba(0, 0, 0, .7), 0 0 22px rgba(0, 0, 0, .5); } }
+:root[data-theme="dark"] .project--glass { --glass-a: 72%; --glass-b: 60%; --glass-reveal: 18%; --glass-blur: 3px; --glass-blur-hover: 1px; --glass-bright: .7; --glass-bright-hover: .8; --glass-tshadow-hover: 0 1px 2px rgba(0, 0, 0, .95), 0 0 8px rgba(0, 0, 0, .9), 0 0 20px rgba(0, 0, 0, .75); --glass-tshadow: 0 1px 2px rgba(0, 0, 0, .75), 0 0 10px rgba(0, 0, 0, .7), 0 0 22px rgba(0, 0, 0, .5); }
 /* a card whose photo is dark and calm can show more of it */
-.project--glass.project--clear { --glass-a: 68%; --glass-b: 56%; --glass-dip: 0%; --glass-blur: 1.5px; --glass-blur-hover: 1px; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .project--glass.project--clear { --glass-a: 56%; --glass-b: 44%; --glass-blur: 1.5px; --glass-blur-hover: 1px; --glass-bright: .8; } }
-:root[data-theme="dark"] .project--glass.project--clear { --glass-a: 56%; --glass-b: 44%; --glass-blur: 1.5px; --glass-blur-hover: 1px; --glass-bright: .8; }
+.project--glass.project--clear { --glass-a: 68%; --glass-b: 56%; --glass-reveal: 14%; --glass-blur: 1.5px; --glass-blur-hover: .5px; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .project--glass.project--clear { --glass-a: 56%; --glass-b: 44%; --glass-reveal: 10%; --glass-blur: 1.5px; --glass-blur-hover: .5px; --glass-bright: .8; --glass-bright-hover: .85; } }
+:root[data-theme="dark"] .project--glass.project--clear { --glass-a: 56%; --glass-b: 44%; --glass-reveal: 10%; --glass-blur: 1.5px; --glass-blur-hover: .5px; --glass-bright: .8; --glass-bright-hover: .85; }
 /* bright, busy screenshots: more blur and a thicker glass so they read as a soft wash of colour */
-.project--glass.project--soft { --glass-a: 88%; --glass-b: 80%; --glass-blur: 7px; --glass-blur-hover: 5px; --glass-dip: 4%; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .project--glass.project--soft { --glass-a: 82%; --glass-b: 72%; --glass-blur: 7px; --glass-blur-hover: 5px; --glass-bright: .62; } }
-:root[data-theme="dark"] .project--glass.project--soft { --glass-a: 82%; --glass-b: 72%; --glass-blur: 7px; --glass-blur-hover: 5px; --glass-bright: .62; }
+.project--glass.project--soft { --glass-a: 88%; --glass-b: 80%; --glass-blur: 7px; --glass-blur-hover: 1.5px; --glass-reveal: 30%; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .project--glass.project--soft { --glass-a: 82%; --glass-b: 72%; --glass-blur: 7px; --glass-blur-hover: 1.5px; --glass-reveal: 24%; --glass-bright: .62; --glass-bright-hover: .75; } }
+:root[data-theme="dark"] .project--glass.project--soft { --glass-a: 82%; --glass-b: 72%; --glass-blur: 7px; --glass-blur-hover: 1.5px; --glass-reveal: 24%; --glass-bright: .62; --glass-bright-hover: .75; }
 @media print { .project__bg, .project__glass { display: none; } }
 
 /* corner icon on every card: "click to enlarge" */
