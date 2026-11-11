@@ -366,7 +366,9 @@ body.lb-open { overflow: hidden; }
   .nav__menu { position: absolute; top: 64px; left: 0; right: 0; flex-direction: column; align-items: stretch; gap: 0; padding: 12px 16px 16px; background: var(--bg); border-bottom: 1px solid var(--line); display: none; }
   .nav__menu.open { display: flex; }
   .nav__menu a:not(.btn) { padding: 12px 0; }
-  .nav__menu .theme { margin-top: 8px; }
+  /* In the phone menu the theme switch is a row like the links: icon where the text starts, with a label. */
+  .nav__menu .theme { display: flex; align-items: center; justify-content: flex-start; gap: 12px; width: auto; height: auto; margin-top: 4px; padding: 12px 0; border: 0; border-radius: 0; background: none; color: var(--muted); font: 500 15px var(--font); }
+  .nav__menu .theme::after { content: "Switch light / dark"; }
   .grid--3 { grid-template-columns: 1fr; }
   .hero { padding-top: 56px; padding-bottom: 16px; }
   .section { padding-top: 40px; } /* tighter gaps between sections on phones: 128px -> 56px after the hero, 80px -> 48px elsewhere */

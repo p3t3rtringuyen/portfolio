@@ -20,6 +20,14 @@
     var open = menu.classList.toggle('open');
     toggle.setAttribute('aria-expanded', String(open));
   });
+  function closeMenu() { menu.classList.remove('open'); toggle.setAttribute('aria-expanded', 'false'); }
+  // A tap outside the open menu (or Escape) closes it.
+  document.addEventListener('click', function (e) {
+    if (menu.classList.contains('open') && !menu.contains(e.target) && !toggle.contains(e.target)) closeMenu();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && menu.classList.contains('open')) { closeMenu(); toggle.focus(); }
+  });
   menu.addEventListener('click', function (e) {
     if (e.target.closest('a')) { menu.classList.remove('open'); toggle.setAttribute('aria-expanded', 'false'); }
   });
