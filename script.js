@@ -407,28 +407,25 @@
     if (Math.abs(dx) > 50) lbShow(lbIndex + (dx < 0 ? 1 : -1), true);
   });
 
-  // ---- Card backdrops: on hover the screenshot shrinks until it is whole inside the card, as wide as the card allows.
-  // CSS shows it cropped (object-fit: cover, inset by a 14px bleed); --fit is the scale that turns that into
-  // "contain" for this card's size and this picture's proportions.
-  function fitBackdrop(card) {
-    var img = card.querySelector('.project__bg img');
-    if (!img || !img.naturalWidth) return;
-    var cw = card.clientWidth, ch = card.clientHeight, bleed = 14;
-    var cover = Math.max((cw + 2 * bleed) / img.naturalWidth, (ch + 2 * bleed) / img.naturalHeight);
-    // Span the card's width; if that would make the picture taller than the card (a portrait screenshot), fit its height instead.
-    var fitted = Math.min(cw / img.naturalWidth, ch / img.naturalHeight);
-    card.style.setProperty('--fit', (fitted / cover).toFixed(4));
-    card.style.setProperty('--img-w', (img.naturalWidth * cover).toFixed(1) + 'px');
-    card.style.setProperty('--img-h', (img.naturalHeight * cover).toFixed(1) + 'px');
+  // ---- Cards with a site screenshot: measure how far the URL can slide, and let a glow follow the pointer.
+  function measureCard(card) {
     // On hover the URL under the title slides sideways to the right end of the title row.
     var title = card.querySelector('h3'), url = title && title.querySelector('small');
     if (url) card.style.setProperty('--url-dx', Math.max(0, title.clientWidth - url.offsetWidth) + 'px');
   }
   document.querySelectorAll('.project--glass').forEach(function (card) {
-    var img = card.querySelector('.project__bg img');
-    if (img) img.addEventListener('load', function () { fitBackdrop(card); });
-    fitBackdrop(card);
-    if (window.ResizeObserver) new ResizeObserver(function () { fitBackdrop(card); }).observe(card);
+    measureCard(card);
+    if (window.ResizeObserver) new ResizeObserver(function () { measureCard(card); }).observe(card);
+    var frame = 0;
+    card.addEventListener('pointermove', function (e) {
+      if (e.pointerType === 'touch' || frame) return;
+      frame = requestAnimationFrame(function () {
+        frame = 0;
+        var r = card.getBoundingClientRect();
+        card.style.setProperty('--mx', (e.clientX - r.left).toFixed(0) + 'px');
+        card.style.setProperty('--my', (e.clientY - r.top).toFixed(0) + 'px');
+      });
+    });
   });
 
   // Deterrents only: no web page can stop a screenshot, a screen recording or a
