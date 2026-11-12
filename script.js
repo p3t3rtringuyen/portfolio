@@ -92,8 +92,8 @@
   var TECH = {
     'Next.js': ['nextdotjs'], 'React': ['react'], 'TypeScript': ['typescript'], 'MUI': ['mui'],
     'TanStack Query': ['reactquery'], 'Keycloak': ['keycloak'], 'Storybook': ['storybook'],
-    'Go': ['go'], 'Gin': ['gin'], 'PostgreSQL': ['postgresql'], 'Redis': ['redis'], 'Kafka': ['apachekafka'],
-    'Swagger': ['swagger'], 'Prometheus': ['prometheus'], 'Zod': ['zod'], 'Swiper': ['swiper'],
+    'PostgreSQL': ['postgresql'], 'Redis': ['redis'],
+    'Zod': ['zod'], 'Swiper': ['swiper'],
     'Chart.js': ['chartdotjs'], 'Framer Motion': ['framer'], 'Turborepo': ['turborepo'], 'Remix': ['remix'],
     'Tailwind': ['tailwindcss'], 'Flutter': ['flutter'], 'Figma API': ['figma'], 'Slack API': ['slack'],
     'Strapi': ['strapi'], 'Nuxt': ['nuxtdotjs'], 'Vue': ['vuedotjs'], 'Express.js': ['express'],
@@ -131,8 +131,8 @@
     'Figma → code': ['figma'], 'TanStack Query': ['reactquery'], 'Redux → hooks': ['redux'],
     'React Hook Form': ['reacthookform'], 'Zod / Yup': ['zod'], 'Formik': ['formik'], 'TanStack Table': ['reacttable'],
     'Charts (Recharts, Chart.js)': ['chartdotjs'], 'Keycloak / OIDC': ['keycloak', 'openid'],
-    'Go (Gin) APIs': ['go', 'gin'], 'NestJS': ['nestjs'], 'Node / Express': ['nodedotjs', 'express'],
-    'PostgreSQL': ['postgresql'], 'Redis': ['redis'], 'Kafka': ['apachekafka'], 'AWS': ['amazonwebservices'],
+    'NestJS': ['nestjs'], 'Node / Express': ['nodedotjs', 'express'],
+    'PostgreSQL': ['postgresql'], 'Redis': ['redis'], 'AWS': ['amazonwebservices'],
     'Strapi CMS': ['strapi'], 'ESLint / Prettier': ['eslint', 'prettier'], 'Conventional Commits': ['conventionalcommits'],
     'GitLab CI': ['gitlab'], 'Docker': ['docker'], 'Asana · Trello · GitLab': ['asana', 'trello', 'gitlab'],
     'Zustand': ['zustand.png'], 'material-react-table': ['mrt.png']
