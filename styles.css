@@ -201,17 +201,15 @@ button { font-family: inherit; }
 /* The picture is laid out at the size that covers the card (--img-w/--img-h, set by script), centred and clipped by the card, so scaling it down on hover reveals the parts that were cropped. */
 .project__bg img { position: absolute; left: 50%; top: 50%; display: block; width: var(--img-w, 100%); height: var(--img-h, 100%); max-width: none; object-fit: cover; filter: blur(var(--glass-blur)) saturate(1.3) brightness(var(--glass-bright)); transform: translate(-50%, -50%) scale(1.05); transition: filter .8s ease, transform 1s cubic-bezier(.2, .7, .2, 1); user-select: none; -webkit-user-drag: none; }
 .project__glass { position: absolute; inset: 0; z-index: -1; pointer-events: none; backdrop-filter: blur(8px) saturate(1.5); -webkit-backdrop-filter: blur(8px) saturate(1.5); --ga: var(--glass-a); --gb: var(--glass-b); background: linear-gradient(155deg, color-mix(in srgb, var(--surface) var(--ga), transparent), color-mix(in srgb, var(--surface) var(--gb), transparent)); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .22), inset 0 0 0 1px rgba(255, 255, 255, .06); transition: --ga .8s ease, --gb .8s ease, backdrop-filter .8s ease, -webkit-backdrop-filter .8s ease; }
-/* hover: the site comes into focus, but the glass never gets thinner than 66% so text keeps its contrast */
-/* Hover: the photo comes fully into focus and shrinks (--fit, set by script) until the whole page fits inside the card. The glass thins to nothing, the blur drops to zero and, a moment later, the
-   lettering fades out so the picture is all that is left; the time lets the visitor read the card first. Mouse-out
-   brings the glass and the text back. Not on touch screens or narrow (phone) windows. */
+/* Hover (mouse, wide window): the photo comes fully into focus and shrinks (--fit, set by script) until the whole page fits
+   inside the card. The glass thins to nothing and the blur drops to zero; the text stays and gets a thin outline so it
+   remains readable over the clear picture. Mouse-out brings everything back. Not on touch screens or phone-width windows. */
 @media (hover: hover) and (min-width: 721px) {
   /* Mouse and a wide window only: on a phone or tablet nothing changes on touch. */
   .project--glass:hover .project__bg img { filter: blur(0px) saturate(1.2) brightness(1); transform: translate(-50%, -50%) scale(var(--fit, 1.1)); transition: filter var(--reveal-dur) ease, transform calc(var(--reveal-dur) * 1.2) cubic-bezier(.2, .7, .2, 1); }
   .project--glass:hover .project__glass { --ga: 0%; --gb: 0%; backdrop-filter: blur(0px) saturate(1); -webkit-backdrop-filter: blur(0px) saturate(1); transition: --ga var(--reveal-dur) ease, --gb var(--reveal-dur) ease, backdrop-filter var(--reveal-dur) ease, -webkit-backdrop-filter var(--reveal-dur) ease; }
-  /* Only the description and the bullet list fade; the label, title and technology chips stay. */
-  .project--glass .bullets, .project--glass header p { transition: opacity .6s ease; }
-  .project--glass:hover .bullets, .project--glass:hover header p { opacity: 0; transition: opacity 1.6s cubic-bezier(.55, 0, .6, 1) .7s; } /* slow start: about a second to read before it fades */
+  /* The text stays where it is; it gets an outline while the picture is clear. */
+  .project--glass:hover header, .project--glass:hover .bullets { text-shadow: 1px 0 0 var(--tsh), -1px 0 0 var(--tsh), 0 1px 0 var(--tsh), 0 -1px 0 var(--tsh), 1px 1px 0 var(--tsh), -1px -1px 0 var(--tsh), 1px -1px 0 var(--tsh), -1px 1px 0 var(--tsh), 0 0 3px var(--tsh); } /* the text stays; a thin outline keeps it readable over the clear picture */
   /* The URL stays under the title and, on hover, slides across to the right end of the row (--url-dx comes from script). */
   .project--glass h3 small { transition: transform .6s ease; }
   .project--glass:hover h3 small { transform: translateX(var(--url-dx, 0px)); transition: transform 1.4s cubic-bezier(.4, 0, .2, 1) .7s; }
