@@ -92,7 +92,6 @@
   var TECH = {
     'Next.js': ['nextdotjs'], 'React': ['react'], 'TypeScript': ['typescript'], 'MUI': ['mui'],
     'TanStack Query': ['reactquery'], 'Keycloak': ['keycloak'], 'Storybook': ['storybook'],
-    'PostgreSQL': ['postgresql'], 'Redis': ['redis'],
     'Zod': ['zod'], 'Swiper': ['swiper'],
     'Chart.js': ['chartdotjs'], 'Framer Motion': ['framer'], 'Turborepo': ['turborepo'], 'Remix': ['remix'],
     'Tailwind': ['tailwindcss'], 'Flutter': ['flutter'], 'Figma API': ['figma'], 'Slack API': ['slack'],
@@ -132,7 +131,7 @@
     'React Hook Form': ['reacthookform'], 'Zod / Yup': ['zod'], 'Formik': ['formik'], 'TanStack Table': ['reacttable'],
     'Charts (Recharts, Chart.js)': ['chartdotjs'], 'Keycloak / OIDC': ['keycloak', 'openid'],
     'NestJS': ['nestjs'], 'Node / Express': ['nodedotjs', 'express'],
-    'PostgreSQL': ['postgresql'], 'Redis': ['redis'], 'AWS': ['amazonwebservices'],
+    'AWS': ['amazonwebservices'],
     'Strapi CMS': ['strapi'], 'ESLint / Prettier': ['eslint', 'prettier'], 'Conventional Commits': ['conventionalcommits'],
     'GitLab CI': ['gitlab'], 'Docker': ['docker'], 'Asana · Trello · GitLab': ['asana', 'trello', 'gitlab'],
     'Zustand': ['zustand.png'], 'material-react-table': ['mrt.png']
