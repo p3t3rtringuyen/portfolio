@@ -343,9 +343,9 @@
   lbPic.appendChild(lbSrcA); lbPic.appendChild(lbSrcW); lbPic.appendChild(lbImg); lbPic.appendChild(el('span', 'lb__shield'));
   var lbCap = el('figcaption', 'lb__cap');
   lbFig.appendChild(lbPic); lbFig.appendChild(lbCap);
-  var lbX = el('button', 'lb__x', '✕'); lbX.type = 'button'; lbX.setAttribute('aria-label', 'Close photo viewer');
-  var lbPrev = el('button', 'lb__nav lb__prev', '‹'); lbPrev.type = 'button'; lbPrev.setAttribute('aria-label', 'Previous photo');
-  var lbNext = el('button', 'lb__nav lb__next', '›'); lbNext.type = 'button'; lbNext.setAttribute('aria-label', 'Next photo');
+  var lbX = el('button', 'lb__x'); lbX.innerHTML = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>'; lbX.type = 'button'; lbX.setAttribute('aria-label', 'Close photo viewer');
+  var lbPrev = el('button', 'lb__nav lb__prev'); lbPrev.innerHTML = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>'; lbPrev.type = 'button'; lbPrev.setAttribute('aria-label', 'Previous photo');
+  var lbNext = el('button', 'lb__nav lb__next'); lbNext.innerHTML = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>'; lbNext.type = 'button'; lbNext.setAttribute('aria-label', 'Next photo');
   [lbBg, lbFig, lbPrev, lbNext, lbX].forEach(function (n) { lb.appendChild(n); });
   document.body.appendChild(lb);
   ['contextmenu', 'dragstart', 'selectstart'].forEach(function (t) {
