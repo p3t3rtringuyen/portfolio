@@ -157,7 +157,7 @@
     // Corner icon: tells the visitor the card can be clicked to enlarge it.
     var hint = el('span', 'project__expand');
     hint.setAttribute('aria-hidden', 'true');
-    hint.title = 'Click the card to enlarge it';
+    hint.title = window.t('Click the card to enlarge it');
     hint.innerHTML = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7.5 7.5M3 21l7.5-7.5"/></svg>';
     card.appendChild(hint);
   });
@@ -219,7 +219,7 @@
     if (canFlip) {
       front.classList.add('is-flippable');
       front.setAttribute('role', 'button');
-      front.setAttribute('aria-label', 'Flip the card to see the website of ' + titleOf(card));
+      front.setAttribute('aria-label', window.t('Flip the card to see the website of ') + titleOf(card));
     } else {
       front.setAttribute('role', 'dialog');
       front.setAttribute('aria-label', titleOf(card));
@@ -232,7 +232,7 @@
     });
     // The Flip button is the last chip of the row of technology chips, so it lines up with them (and sits at the right end).
     if (canFlip) {
-      var badge = el('li', 'zoom__badge', 'Flip ');
+      var badge = el('li', 'zoom__badge', window.t('Flip') + ' ');
       badge.setAttribute('aria-hidden', 'true');
       badge.appendChild(el('i', '', '↻'));
       var chipRow = front.querySelector('.chips');
@@ -240,25 +240,25 @@
       chipRow.appendChild(badge);
     }
     var x1 = el('button', 'zoom__x', '✕');
-    x1.type = 'button'; x1.setAttribute('aria-label', 'Close');
+    x1.type = 'button'; x1.setAttribute('aria-label', window.t('Close'));
     front.appendChild(x1);
 
     // Back: the website (loaded on the first flip) or the case study
     var back = el('div', 'zoom__face zoom__back');
     var bar = el('div', 'win__bar zoom__bar');
     var bFlip = el('button', 'win__ext', '↺');
-    bFlip.type = 'button'; bFlip.title = 'Flip back'; bFlip.setAttribute('aria-label', 'Flip back');
+    bFlip.type = 'button'; bFlip.title = window.t('Flip back'); bFlip.setAttribute('aria-label', window.t('Flip back'));
     var urlText = url ? url.replace(/^https?:\/\//, '') : '';
     var urlBox = el('div', 'win__url', urlText);
     bar.appendChild(bFlip); bar.appendChild(urlBox);
     if (url) {
       var ext = el('a', 'win__ext', '↗');
       ext.href = url; ext.target = '_blank'; ext.rel = 'noopener';
-      ext.title = 'Open in a new tab'; ext.setAttribute('aria-label', 'Open in a new tab');
+      ext.title = window.t('Open in a new tab'); ext.setAttribute('aria-label', window.t('Open in a new tab'));
       bar.appendChild(ext);
     }
     var x2 = el('button', 'win__ext', '✕');
-    x2.type = 'button'; x2.setAttribute('aria-label', 'Close');
+    x2.type = 'button'; x2.setAttribute('aria-label', window.t('Close'));
     bar.appendChild(x2);
     var content = el('div', 'win__body');
     var frame = null;
@@ -333,7 +333,7 @@
   var lb = el('div', 'lb');
   lb.setAttribute('role', 'dialog');
   lb.setAttribute('aria-modal', 'true');
-  lb.setAttribute('aria-label', 'Photo viewer');
+  lb.setAttribute('aria-label', window.t('Photo viewer'));
   var lbBg = el('div', 'lb__bg');
   var lbFig = el('figure', 'lb__fig');
   var lbPic = el('picture');
@@ -343,9 +343,9 @@
   lbPic.appendChild(lbSrcA); lbPic.appendChild(lbSrcW); lbPic.appendChild(lbImg); lbPic.appendChild(el('span', 'lb__shield'));
   var lbCap = el('figcaption', 'lb__cap');
   lbFig.appendChild(lbPic); lbFig.appendChild(lbCap);
-  var lbX = el('button', 'lb__x'); lbX.innerHTML = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>'; lbX.type = 'button'; lbX.setAttribute('aria-label', 'Close photo viewer');
-  var lbPrev = el('button', 'lb__nav lb__prev'); lbPrev.innerHTML = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>'; lbPrev.type = 'button'; lbPrev.setAttribute('aria-label', 'Previous photo');
-  var lbNext = el('button', 'lb__nav lb__next'); lbNext.innerHTML = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>'; lbNext.type = 'button'; lbNext.setAttribute('aria-label', 'Next photo');
+  var lbX = el('button', 'lb__x'); lbX.innerHTML = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>'; lbX.type = 'button'; lbX.setAttribute('aria-label', window.t('Close photo viewer'));
+  var lbPrev = el('button', 'lb__nav lb__prev'); lbPrev.innerHTML = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>'; lbPrev.type = 'button'; lbPrev.setAttribute('aria-label', window.t('Previous photo'));
+  var lbNext = el('button', 'lb__nav lb__next'); lbNext.innerHTML = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>'; lbNext.type = 'button'; lbNext.setAttribute('aria-label', window.t('Next photo'));
   [lbBg, lbFig, lbPrev, lbNext, lbX].forEach(function (n) { lb.appendChild(n); });
   document.body.appendChild(lb);
   ['contextmenu', 'dragstart', 'selectstart'].forEach(function (t) {
@@ -468,11 +468,11 @@
       return ok;
     }
     function show(ok) {
-      tip.textContent = ok ? 'Copied ✓' : 'Press Ctrl+C to copy';
-      if (status) status.textContent = ok ? 'Email address copied' : '';
+      tip.textContent = window.t(ok ? 'Copied ✓' : 'Press Ctrl+C to copy');
+      if (status) status.textContent = ok ? window.t('Email address copied') : '';
       b.classList.add('is-copied');
       clearTimeout(timer);
-      timer = setTimeout(function () { b.classList.remove('is-copied'); tip.textContent = 'Click to copy'; }, 1800);
+      timer = setTimeout(function () { b.classList.remove('is-copied'); tip.textContent = window.t('Click to copy'); }, 1800);
     }
     b.addEventListener('click', function () {
       if (navigator.clipboard && window.isSecureContext) {

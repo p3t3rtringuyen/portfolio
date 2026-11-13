@@ -39,6 +39,9 @@ p { margin: 0 0 1em; }
 .nav__menu { display: flex; align-items: center; gap: 22px; }
 .nav__menu a:not(.btn) { color: var(--muted); font-weight: 500; font-size: 15px; }
 .nav__menu a:not(.btn):hover { color: var(--text); text-decoration: none; }
+.lang { display: inline-flex; align-items: center; gap: 2px; height: 36px; padding: 3px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--muted); font: 600 12px var(--mono); cursor: pointer; }
+.lang span { display: grid; place-items: center; min-width: 28px; height: 28px; border-radius: 7px; transition: background .2s, color .2s; }
+.lang span.is-on { background: var(--accent); color: var(--accent-ink); }
 .theme { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--text); cursor: pointer; }
 .nav__toggle { display: none; width: 40px; height: 40px; border: 1px solid var(--line); background: var(--surface); border-radius: 10px; cursor: pointer; padding: 0; flex-direction: column; justify-content: center; align-items: center; gap: 5px; }
 .nav__toggle span { width: 18px; height: 2px; background: var(--text); border-radius: 2px; }
@@ -357,7 +360,8 @@ body.lb-open { overflow: hidden; }
   .nav__menu a:not(.btn) { padding: 12px 0; }
   /* In the phone menu the theme switch is a row like the links: icon where the text starts, with a label. */
   .nav__menu .theme { display: flex; align-items: center; justify-content: flex-start; gap: 12px; width: auto; height: auto; margin-top: 4px; padding: 12px 0; border: 0; border-radius: 0; background: none; color: var(--muted); font: 500 15px var(--font); }
-  .nav__menu .theme::after { content: "Switch light / dark"; }
+  .nav__menu .theme::after { content: attr(data-lbl); }
+  .nav__menu .lang { align-self: flex-start; margin-top: 8px; }
   .grid--3 { grid-template-columns: 1fr; }
   .hero { padding-top: 56px; padding-bottom: 16px; }
   .section { padding-top: 40px; } /* tighter gaps between sections on phones: 128px -> 56px after the hero, 80px -> 48px elsewhere */
@@ -368,4 +372,4 @@ body.lb-open { overflow: hidden; }
   *, *::before, *::after { transition: none !important; animation: none !important; }
   .js .reveal { opacity: 1; transform: none; }
 }
-@media print { .nav, .theme, .cta, .filters { display: none; } body { background: #fff; color: #000; } }
+@media print { .nav, .theme, .lang, .cta, .filters { display: none; } body { background: #fff; color: #000; } }
